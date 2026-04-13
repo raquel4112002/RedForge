@@ -51,6 +51,11 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
     hasSubcommands: false,
   },
   {
+    name: "redforge",
+    description: "Initialize and manage RedForge workspace structure",
+    hasSubcommands: true,
+  },
+  {
     name: "message",
     description: "Send, read, and manage messages",
     hasSubcommands: true,

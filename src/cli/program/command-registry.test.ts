@@ -80,6 +80,7 @@ describe("command-registry", () => {
     expect(names).toContain("mcp");
     expect(names).toContain("sessions");
     expect(names).toContain("tasks");
+    expect(names).toContain("redforge");
     expect(names).not.toContain("agent");
     expect(names).not.toContain("status");
     expect(names).not.toContain("doctor");
