@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { DEFAULT_BOOTSTRAP_FILENAME } from "../agents/workspace.js";
 import { formatCliCommand } from "../cli/command-format.js";
+import { PRODUCT_DISPLAY_NAME } from "../cli/cli-name.js";
 import {
   buildGatewayInstallPlan,
   gatewayInstallErrorHint,
@@ -444,8 +445,8 @@ export async function finalizeSetupWizard(
         [
           `Dashboard link (with token): ${authedUrl}`,
           controlUiOpened
-            ? "Opened in your browser. Keep that tab to control OpenClaw."
-            : "Copy/paste this URL in a browser on this machine to control OpenClaw.",
+            ? `Opened in your browser. Keep that tab to control ${PRODUCT_DISPLAY_NAME}.`
+            : `Copy/paste this URL in a browser on this machine to control ${PRODUCT_DISPLAY_NAME}.`,
           controlUiOpenHint,
         ]
           .filter(Boolean)
@@ -506,8 +507,8 @@ export async function finalizeSetupWizard(
       [
         `Dashboard link (with token): ${authedUrl}`,
         controlUiOpened
-          ? "Opened in your browser. Keep that tab to control OpenClaw."
-          : "Copy/paste this URL in a browser on this machine to control OpenClaw.",
+          ? `Opened in your browser. Keep that tab to control ${PRODUCT_DISPLAY_NAME}.`
+          : `Copy/paste this URL in a browser on this machine to control ${PRODUCT_DISPLAY_NAME}.`,
         controlUiOpenHint,
       ]
         .filter(Boolean)
@@ -637,10 +638,10 @@ export async function finalizeSetupWizard(
 
   await prompter.outro(
     controlUiOpened
-      ? "Onboarding complete. Dashboard opened; keep that tab to control OpenClaw."
+      ? `Onboarding complete. Dashboard opened; keep that tab to control ${PRODUCT_DISPLAY_NAME}.`
       : seededInBackground
         ? "Onboarding complete. Web UI seeded in the background; open it anytime with the dashboard link above."
-        : "Onboarding complete. Use the dashboard link above to control OpenClaw.",
+        : `Onboarding complete. Use the dashboard link above to control ${PRODUCT_DISPLAY_NAME}.`,
   );
 
   return { launchedTui };

@@ -2,6 +2,9 @@ import path from "node:path";
 
 export const DEFAULT_CLI_NAME = "redforge";
 
+/** User-visible product name (banners, onboarding, help). Distinct from the `openclaw` npm binary name. */
+export const PRODUCT_DISPLAY_NAME = "RedForge";
+
 const KNOWN_CLI_NAMES = new Set([DEFAULT_CLI_NAME, "openclaw"]);
 const CLI_PREFIX_RE = /^(?:((?:pnpm|npm|bunx|npx)\s+))?(?:openclaw|redforge)\b/;
 

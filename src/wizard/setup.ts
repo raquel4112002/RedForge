@@ -1,4 +1,5 @@
 import { formatCliCommand } from "../cli/command-format.js";
+import { PRODUCT_DISPLAY_NAME } from "../cli/cli-name.js";
 import type {
   GatewayAuthChoice,
   OnboardMode,
@@ -82,15 +83,15 @@ async function requireRiskAcknowledgement(params: {
     [
       "Security warning — please read.",
       "",
-      "OpenClaw is a hobby project and still in beta. Expect sharp edges.",
-      "By default, OpenClaw is a personal agent: one trusted operator boundary.",
+      `${PRODUCT_DISPLAY_NAME} is a hobby project and still in beta. Expect sharp edges.`,
+      `By default, ${PRODUCT_DISPLAY_NAME} is a personal agent: one trusted operator boundary.`,
       "This bot can read files and run actions if tools are enabled.",
       "A bad prompt can trick it into doing unsafe things.",
       "",
-      "OpenClaw is not a hostile multi-tenant boundary by default.",
+      `${PRODUCT_DISPLAY_NAME} is not a hostile multi-tenant boundary by default.`,
       "If multiple users can message one tool-enabled agent, they share that delegated tool authority.",
       "",
-      "If you’re not comfortable with security hardening and access control, don’t run OpenClaw.",
+      `If you’re not comfortable with security hardening and access control, don’t run ${PRODUCT_DISPLAY_NAME}.`,
       "Ask someone experienced to help before enabling tools or exposing it to the internet.",
       "",
       "Recommended baseline:",
@@ -102,8 +103,8 @@ async function requireRiskAcknowledgement(params: {
       "- Use the strongest available model for any bot with tools or untrusted inboxes.",
       "",
       "Run regularly:",
-      "openclaw security audit --deep",
-      "openclaw security audit --fix",
+      formatCliCommand("openclaw security audit --deep"),
+      formatCliCommand("openclaw security audit --fix"),
       "",
       "Must read: https://docs.openclaw.ai/gateway/security",
     ].join("\n"),
@@ -127,7 +128,7 @@ export async function runSetupWizard(
 ) {
   const onboardHelpers = await import("../commands/onboard-helpers.js");
   onboardHelpers.printWizardHeader(runtime);
-  await prompter.intro("OpenClaw setup");
+  await prompter.intro(`${PRODUCT_DISPLAY_NAME} setup`);
   await requireRiskAcknowledgement({ opts, prompter });
 
   const snapshot = await readConfigFileSnapshot();
