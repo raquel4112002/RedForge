@@ -7,10 +7,14 @@ export type OffensiveMemoryRecord = {
   key: string;
   kind: OffensiveMemoryKind;
   targetId: string;
+  organizationId?: string;
   missionId?: string;
   summary: string;
   source?: string;
   confidence?: "low" | "medium" | "high";
+  outcome?: "success" | "failed" | "neutral";
+  successCount: number;
+  failedCount: number;
   tags: string[];
   count: number;
   firstSeenAt: string;
@@ -26,10 +30,12 @@ type OffensiveMemoryStore = {
 type UpsertMemoryInput = {
   kind: OffensiveMemoryKind;
   targetId: string;
+  organizationId?: string;
   missionId?: string;
   summary: string;
   source?: string;
   confidence?: "low" | "medium" | "high";
+  outcome?: "success" | "failed" | "neutral";
   tags?: string[];
   at?: string;
 };
@@ -66,7 +72,13 @@ async function readStore(workspaceDir: string): Promise<OffensiveMemoryStore> {
       return {
         version: STORE_VERSION,
         updatedAt: parsed.updatedAt,
-        records: parsed.records.filter((entry) => Boolean(entry && entry.key && entry.summary)),
+        records: parsed.records
+          .filter((entry) => Boolean(entry && entry.key && entry.summary))
+          .map((entry) => ({
+            ...entry,
+            successCount: entry.successCount ?? 0,
+            failedCount: entry.failedCount ?? 0,
+          })),
       };
     }
   } catch {
@@ -111,9 +123,16 @@ export async function upsertOperationalMemory(
     if (existing) {
       existing.lastSeenAt = at;
       existing.count += 1;
+      existing.organizationId = entry.organizationId ?? existing.organizationId;
       existing.missionId = entry.missionId ?? existing.missionId;
       existing.source = entry.source ?? existing.source;
       existing.confidence = entry.confidence ?? existing.confidence;
+      existing.outcome = entry.outcome ?? existing.outcome;
+      if (entry.outcome === "success") {
+        existing.successCount += 1;
+      } else if (entry.outcome === "failed") {
+        existing.failedCount += 1;
+      }
       existing.tags = [...new Set([...existing.tags, ...(entry.tags ?? [])])];
       continue;
     }
@@ -122,10 +141,14 @@ export async function upsertOperationalMemory(
       key,
       kind: entry.kind,
       targetId: entry.targetId,
+      organizationId: entry.organizationId,
       missionId: entry.missionId,
       summary,
       source: entry.source,
       confidence: entry.confidence,
+      outcome: entry.outcome,
+      successCount: entry.outcome === "success" ? 1 : 0,
+      failedCount: entry.outcome === "failed" ? 1 : 0,
       tags: [...new Set(entry.tags ?? [])],
       count: 1,
       firstSeenAt: at,
@@ -140,18 +163,32 @@ export async function upsertOperationalMemory(
 export async function readOperationalMemory(params: {
   workspaceDir: string;
   targetId: string;
+  organizationId?: string;
   missionId?: string;
   primaryTarget?: string;
+  kinds?: OffensiveMemoryKind[];
   limit?: number;
 }): Promise<OffensiveMemoryRecord[]> {
   const store = await readStore(params.workspaceDir);
   const limit = Math.max(1, params.limit ?? 6);
   const targetNeedle = params.primaryTarget?.trim().toLowerCase() ?? "";
   const missionNeedle = params.missionId?.trim().toLowerCase() ?? "";
+  const organizationNeedle = params.organizationId?.trim().toLowerCase() ?? "";
+  const kindSet = params.kinds ? new Set(params.kinds) : null;
 
   return store.records
     .filter((record) => {
+      if (kindSet && !kindSet.has(record.kind)) {
+        return false;
+      }
       if (record.targetId === params.targetId) {
+        return true;
+      }
+      if (
+        organizationNeedle &&
+        record.organizationId &&
+        record.organizationId.toLowerCase() === organizationNeedle
+      ) {
         return true;
       }
       const normalized = record.summary.toLowerCase();
@@ -163,6 +200,34 @@ export async function readOperationalMemory(params: {
       }
       return false;
     })
-    .toSorted((a, b) => b.lastSeenAt.localeCompare(a.lastSeenAt))
+    .toSorted((a, b) => {
+      const scoreA = a.successCount - a.failedCount;
+      const scoreB = b.successCount - b.failedCount;
+      if (scoreA !== scoreB) {
+        return scoreB - scoreA;
+      }
+      return b.lastSeenAt.localeCompare(a.lastSeenAt);
+    })
     .slice(0, limit);
+}
+
+export async function readAttemptGuidance(params: {
+  workspaceDir: string;
+  targetId: string;
+  organizationId?: string;
+  attemptKey: string;
+  limit?: number;
+}): Promise<OffensiveMemoryRecord[]> {
+  const records = await readOperationalMemory({
+    workspaceDir: params.workspaceDir,
+    targetId: params.targetId,
+    organizationId: params.organizationId,
+    kinds: ["observation", "playbook", "finding"],
+    limit: Math.max(1, (params.limit ?? 5) * 3),
+  });
+  const keyTag = `attempt-key:${params.attemptKey}`;
+  return records
+    .filter((record) => record.tags.includes(keyTag))
+    .toSorted((a, b) => b.lastSeenAt.localeCompare(a.lastSeenAt))
+    .slice(0, Math.max(1, params.limit ?? 5));
 }
