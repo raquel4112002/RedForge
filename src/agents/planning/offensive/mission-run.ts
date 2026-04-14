@@ -9,6 +9,7 @@ import { shortenHomePath } from "../../../utils.js";
 import { agentCommand } from "../../agent-command.js";
 import { resolveDefaultAgentId } from "../../agent-scope.js";
 import { DEFAULT_AGENT_WORKSPACE_DIR } from "../../workspace.js";
+import { readOperationalMemory, upsertOperationalMemory } from "./mission-memory.js";
 import type { InferredMissionIntent, PlannerMetadata } from "./mission-plan-types.js";
 
 type ParsedSimpleYaml = Record<string, unknown>;
@@ -85,7 +86,7 @@ type FindingRecord = {
 
 type OperationalMemoryEntry = {
   path: string;
-  kind: "report" | "playbook" | "finding" | "notes";
+  kind: "report" | "playbook" | "finding" | "notes" | "observation";
   summary: string;
 };
 
@@ -832,6 +833,23 @@ async function loadOperationalMemory(params: {
   limit?: number;
 }): Promise<OperationalMemoryEntry[]> {
   const limit = Math.max(1, params.limit ?? 6);
+  const unifiedMemory = await readOperationalMemory({
+    workspaceDir: params.workspaceDir,
+    targetId: params.targetId,
+    missionId: params.missionId,
+    primaryTarget: params.primaryTarget,
+    limit,
+  });
+  const unifiedEntries: OperationalMemoryEntry[] = unifiedMemory.map((entry) => ({
+    path: entry.source ?? `memory:${entry.kind}`,
+    kind: entry.kind,
+    summary: entry.summary,
+  }));
+  if (unifiedEntries.length >= limit) {
+    return unifiedEntries.slice(0, limit);
+  }
+
+  const remaining = limit - unifiedEntries.length;
   const entries: OperationalMemoryEntry[] = [];
   const candidateFiles: Array<{ path: string; kind: OperationalMemoryEntry["kind"] }> = [];
 
@@ -859,7 +877,7 @@ async function loadOperationalMemory(params: {
   await collectDir(knowledgeDir, "playbook");
 
   for (const candidate of candidateFiles) {
-    if (entries.length >= limit) {
+    if (entries.length >= remaining) {
       break;
     }
     let raw = "";
@@ -887,7 +905,32 @@ async function loadOperationalMemory(params: {
     });
   }
 
-  return entries;
+  return [...unifiedEntries, ...entries].slice(0, limit);
+}
+
+function buildMemoryUpsertsFromFindings(params: {
+  findings: FindingRecord[];
+  missionId: string;
+  targetId: string;
+  runId: string;
+}): Array<{
+  kind: "finding";
+  targetId: string;
+  missionId: string;
+  summary: string;
+  source: string;
+  confidence: "low" | "medium" | "high";
+  tags: string[];
+}> {
+  return params.findings.map((finding) => ({
+    kind: "finding",
+    targetId: params.targetId,
+    missionId: params.missionId,
+    summary: `${finding.title}: ${finding.summary}`,
+    source: `run:${params.runId}:${finding.id}`,
+    confidence: finding.confidence,
+    tags: [finding.category, finding.severity, finding.status],
+  }));
 }
 
 function buildRedForgeMissionPrompt(params: {
@@ -1445,6 +1488,15 @@ export async function redforgeMissionRunCommand(
     });
     await writeJson(findingsPath, findings);
     if (findings.length > 0) {
+      await upsertOperationalMemory(
+        workspaceDir,
+        buildMemoryUpsertsFromFindings({
+          findings,
+          missionId,
+          targetId,
+          runId,
+        }),
+      );
       await recordObservation({
         observationsPath,
         runId,
