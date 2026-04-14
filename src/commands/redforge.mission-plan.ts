@@ -1,20 +1,21 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { DEFAULT_AGENT_WORKSPACE_DIR } from "../agents/workspace.js";
-import { gateMissionIntent } from "../redforge/planner/mission-intent-gate.js";
-import { buildMissionPlan } from "../redforge/planner/mission-plan-core.js";
+import { gateMissionIntent } from "../agents/planning/offensive/mission-intent-gate.js";
+import { buildMissionPlan } from "../agents/planning/offensive/mission-plan-core.js";
 import {
   renderMissionIntentGateResult,
   renderMissionPlan,
-} from "../redforge/planner/mission-plan-render.js";
+} from "../agents/planning/offensive/mission-plan-render.js";
+import { evaluateMissionAutoRunPolicy } from "../agents/planning/offensive/mission-policy.js";
+import {
+  redforgeMissionRunCommand,
+  type RedForgeMissionRunResult,
+} from "../agents/planning/offensive/mission-run.js";
+import { DEFAULT_AGENT_WORKSPACE_DIR } from "../agents/workspace.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { defaultRuntime, writeRuntimeJson } from "../runtime.js";
 import { shortenHomePath } from "../utils.js";
 import { redforgeMissionCreateCommand } from "./redforge.mission-create.js";
-import {
-  redforgeMissionRunCommand,
-  type RedForgeMissionRunResult,
-} from "./redforge.mission-run.js";
 import { redforgeScopeCreateCommand } from "./redforge.scope-create.js";
 import { redforgeTargetAddCommand } from "./redforge.target-add.js";
 
@@ -221,19 +222,26 @@ export async function redforgeMissionPlanCommand(
   }
 
   let runSummary: RedForgeMissionRunResult | undefined;
+  const runPolicy = evaluateMissionAutoRunPolicy(plan);
 
   if (opts.run) {
-    runSummary = await redforgeMissionRunCommand(
-      {
-        workspace: workspaceDir,
-        mission: plan.mission.id,
-        agent: opts.agent,
-        model: opts.model,
-        baseUrl: opts.baseUrl,
-        dryRun: Boolean(opts.dryRun),
-      },
-      runtime,
-    );
+    if (runPolicy.allowed) {
+      runSummary = await redforgeMissionRunCommand(
+        {
+          workspace: workspaceDir,
+          mission: plan.mission.id,
+          agent: opts.agent,
+          model: opts.model,
+          baseUrl: opts.baseUrl,
+          dryRun: Boolean(opts.dryRun),
+        },
+        runtime,
+      );
+    } else {
+      runtime.log(
+        `RedForge run skipped (${runPolicy.capability}): confidence=${runPolicy.confidence}, suggestedNextAction=${runPolicy.suggestedNextAction}. ${runPolicy.reason}. Use mission-run explicitly after review.`,
+      );
+    }
   }
 
   runtime.log(

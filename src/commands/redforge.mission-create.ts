@@ -1,6 +1,6 @@
 import path from "node:path";
+import type { PlannerMetadata } from "../agents/planning/offensive/mission-plan-types.js";
 import { DEFAULT_AGENT_WORKSPACE_DIR } from "../agents/workspace.js";
-import type { PlannerMetadata } from "../redforge/planner/mission-plan-types.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { defaultRuntime } from "../runtime.js";
 import { shortenHomePath } from "../utils.js";
