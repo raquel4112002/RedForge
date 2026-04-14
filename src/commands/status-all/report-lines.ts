@@ -1,3 +1,4 @@
+import { PRODUCT_DISPLAY_NAME } from "../../cli/cli-name.js";
 import type { ProgressReporter } from "../../cli/progress.js";
 import { getTerminalTableWidth, renderTable } from "../../terminal/table.js";
 import { isRich, theme } from "../../terminal/theme.js";
@@ -65,7 +66,7 @@ export async function buildStatusAllReportLines(params: {
   const tableWidth = getTerminalTableWidth();
 
   const lines: string[] = [];
-  lines.push(heading("OpenClaw status --all"));
+  lines.push(heading(`${PRODUCT_DISPLAY_NAME} status --all`));
   appendStatusReportSections({
     lines,
     heading,

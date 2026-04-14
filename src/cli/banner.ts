@@ -51,8 +51,8 @@ export function formatCliBannerLine(version: string, options: BannerOptions = {}
   const commitLabel = commit ?? "unknown";
   const tagline = pickTagline({ ...options, mode: resolveTaglineMode(options) });
   const rich = options.richTty ?? isRich();
-  const title = `🦞 ${PRODUCT_DISPLAY_NAME}`;
-  const prefix = "🦞 ";
+  const title = `⚒️ ${PRODUCT_DISPLAY_NAME}`;
+  const prefix = "⚒️ ";
   const columns = options.columns ?? process.stdout.columns ?? 120;
   const plainBaseLine = `${title} ${version} (${commitLabel})`;
   const plainFullLine = tagline ? `${plainBaseLine} — ${tagline}` : plainBaseLine;
@@ -93,7 +93,7 @@ export const CLI_BANNER_ASCII_LINES = [
   "██░███░██░▀▀░██░▄▄▄██░█░█░██░█████░████░▀▀░██░█░█░██",
   "██░▀▀▀░██░█████░▀▀▀██░██▄░██░▀▀▄██░▀▀░█░██░██▄▀▄▀▄██",
   "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀",
-  `                  🦞 ${PRODUCT_DISPLAY_NAME.toUpperCase()} 🦞                    `,
+  `                  ⚒️ ${PRODUCT_DISPLAY_NAME.toUpperCase()} ⚒️                    `,
   " ",
 ] as const;
 
@@ -123,9 +123,9 @@ export function formatCliBannerArt(options: BannerOptions = {}): string {
     if (line.includes(brandUpper)) {
       return (
         theme.muted("              ") +
-        theme.accent("🦞") +
+        theme.accent("⚒️") +
         theme.info(` ${brandUpper} `) +
-        theme.accent("🦞")
+        theme.accent("⚒️")
       );
     }
     return splitGraphemes(line).map(colorChar).join("");

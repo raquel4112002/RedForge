@@ -1,3 +1,4 @@
+import { PRODUCT_DISPLAY_NAME } from "../cli/cli-name.js";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
 import type { SecretInput } from "../config/types.secrets.js";
 import { isSecureWebSocketUrl } from "../gateway/net.js";
@@ -177,7 +178,7 @@ export async function promptRemoteGatewayConfig(
       copy: {
         modeMessage: "How do you want to provide this gateway token?",
         plaintextLabel: "Enter token now",
-        plaintextHint: "Stores the token directly in OpenClaw config",
+        plaintextHint: `Stores the token directly in ${PRODUCT_DISPLAY_NAME} config`,
       },
     });
     if (selectedMode === "ref") {
@@ -209,7 +210,7 @@ export async function promptRemoteGatewayConfig(
       copy: {
         modeMessage: "How do you want to provide this gateway password?",
         plaintextLabel: "Enter password now",
-        plaintextHint: "Stores the password directly in OpenClaw config",
+        plaintextHint: `Stores the password directly in ${PRODUCT_DISPLAY_NAME} config`,
       },
     });
     if (selectedMode === "ref") {

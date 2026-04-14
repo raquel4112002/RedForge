@@ -1,3 +1,4 @@
+import { PRODUCT_DISPLAY_NAME } from "../cli/cli-name.js";
 import { danger, info, shouldLogVerbose, warn } from "../globals.js";
 import { logDebug } from "../logger.js";
 import type { RuntimeEnv } from "../runtime.js";
@@ -59,7 +60,7 @@ export async function handlePortError(
       if (/openclaw|src\/index\.ts|dist\/index\.js/.test(details)) {
         runtime.error(
           warn(
-            "It looks like another OpenClaw instance is already running. Stop it or pick a different port.",
+            `It looks like another ${PRODUCT_DISPLAY_NAME} instance is already running. Stop it or pick a different port.`,
           ),
         );
       }

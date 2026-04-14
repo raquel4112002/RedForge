@@ -4,6 +4,7 @@ import { enableCompileCache } from "node:module";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { isRootHelpInvocation, isRootVersionInvocation } from "./cli/argv.js";
+import { PRODUCT_DISPLAY_NAME } from "./cli/cli-name.js";
 import { parseCliContainerArgs, resolveCliContainerTarget } from "./cli/container-target.js";
 import { applyCliProfileEnv, parseCliProfileArgs } from "./cli/profile.js";
 import { normalizeWindowsArgv } from "./cli/windows-argv.js";
@@ -109,7 +110,9 @@ if (
     Promise.all([import("./version.js"), import("./infra/git-commit.js")])
       .then(([{ VERSION }, { resolveCommitHash }]) => {
         const commit = resolveCommitHash({ moduleUrl: import.meta.url });
-        console.log(commit ? `OpenClaw ${VERSION} (${commit})` : `OpenClaw ${VERSION}`);
+        console.log(
+          commit ? `${PRODUCT_DISPLAY_NAME} ${VERSION} (${commit})` : `${PRODUCT_DISPLAY_NAME} ${VERSION}`,
+        );
         process.exit(0);
       })
       .catch((error) => {
