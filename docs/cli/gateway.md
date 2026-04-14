@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw Gateway CLI (`openclaw gateway`) — run, query, and discover gateways"
+summary: "RedForge Gateway CLI (`RedForge gateway`) — run, query, and discover gateways"
 read_when:
   - Running the Gateway from the CLI (dev or servers)
   - Debugging Gateway auth, bind modes, and connectivity
@@ -9,9 +9,9 @@ title: "gateway"
 
 # Gateway CLI
 
-The Gateway is OpenClaw’s WebSocket server (channels, nodes, sessions, hooks).
+The Gateway is RedForge’s WebSocket server (channels, nodes, sessions, hooks).
 
-Subcommands in this page live under `openclaw gateway …`.
+Subcommands in this page live under `RedForge gateway …`.
 
 Related docs:
 
@@ -24,19 +24,19 @@ Related docs:
 Run a local Gateway process:
 
 ```bash
-openclaw gateway
+RedForge gateway
 ```
 
 Foreground alias:
 
 ```bash
-openclaw gateway run
+RedForge gateway run
 ```
 
 Notes:
 
-- By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.openclaw/openclaw.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
-- `openclaw onboard --mode local` and `openclaw setup` are expected to write `gateway.mode=local`. If the file exists but `gateway.mode` is missing, treat that as a broken or clobbered config and repair it instead of assuming local mode implicitly.
+- By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.RedForge/RedForge.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
+- `RedForge onboard --mode local` and `RedForge setup` are expected to write `gateway.mode=local`. If the file exists but `gateway.mode` is missing, treat that as a broken or clobbered config and repair it instead of assuming local mode implicitly.
 - If the file exists and `gateway.mode` is missing, the Gateway treats that as suspicious config damage and refuses to “guess local” for you.
 - Binding beyond loopback without auth is blocked (safety guardrail).
 - `SIGUSR1` triggers an in-process restart when authorized (`commands.restart` is enabled by default; set `commands.restart: false` to block manual restart, while gateway tool/config apply/update remain allowed).
@@ -47,7 +47,7 @@ Notes:
 - `--port <port>`: WebSocket port (default comes from config/env; usually `18789`).
 - `--bind <loopback|lan|tailnet|auto|custom>`: listener bind mode.
 - `--auth <token|password>`: auth mode override.
-- `--token <token>`: token override (also sets `OPENCLAW_GATEWAY_TOKEN` for the process).
+- `--token <token>`: token override (also sets `RedForge_GATEWAY_TOKEN` for the process).
 - `--password <password>`: password override. Warning: inline passwords can be exposed in local process listings.
 - `--password-file <path>`: read the gateway password from a file.
 - `--tailscale <off|serve|funnel>`: expose the Gateway via Tailscale.
@@ -87,7 +87,7 @@ Pass `--token` or `--password` explicitly. Missing explicit credentials is an er
 ### `gateway health`
 
 ```bash
-openclaw gateway health --url ws://127.0.0.1:18789
+RedForge gateway health --url ws://127.0.0.1:18789
 ```
 
 ### `gateway usage-cost`
@@ -95,9 +95,9 @@ openclaw gateway health --url ws://127.0.0.1:18789
 Fetch usage-cost summaries from session logs.
 
 ```bash
-openclaw gateway usage-cost
-openclaw gateway usage-cost --days 7
-openclaw gateway usage-cost --json
+RedForge gateway usage-cost
+RedForge gateway usage-cost --days 7
+RedForge gateway usage-cost --json
 ```
 
 Options:
@@ -109,9 +109,9 @@ Options:
 `gateway status` shows the Gateway service (launchd/systemd/schtasks) plus an optional RPC probe.
 
 ```bash
-openclaw gateway status
-openclaw gateway status --json
-openclaw gateway status --require-rpc
+RedForge gateway status
+RedForge gateway status --json
+RedForge gateway status --require-rpc
 ```
 
 Options:
@@ -154,8 +154,8 @@ targets as:
 If multiple gateways are reachable, it prints all of them. Multiple gateways are supported when you use isolated profiles/ports (e.g., a rescue bot), but most installs still run a single gateway.
 
 ```bash
-openclaw gateway probe
-openclaw gateway probe --json
+RedForge gateway probe
+RedForge gateway probe --json
 ```
 
 Interpretation:
@@ -193,7 +193,7 @@ The macOS app “Remote over SSH” mode uses a local port-forward so the remote
 CLI equivalent:
 
 ```bash
-openclaw gateway probe --ssh user@gateway-host
+RedForge gateway probe --ssh user@gateway-host
 ```
 
 Options:
@@ -214,8 +214,8 @@ Config (optional, used as defaults):
 Low-level RPC helper.
 
 ```bash
-openclaw gateway call status
-openclaw gateway call logs.tail --params '{"sinceMs": 60000}'
+RedForge gateway call status
+RedForge gateway call logs.tail --params '{"sinceMs": 60000}'
 ```
 
 Options:
@@ -236,11 +236,11 @@ Notes:
 ## Manage the Gateway service
 
 ```bash
-openclaw gateway install
-openclaw gateway start
-openclaw gateway stop
-openclaw gateway restart
-openclaw gateway uninstall
+RedForge gateway install
+RedForge gateway start
+RedForge gateway stop
+RedForge gateway restart
+RedForge gateway uninstall
 ```
 
 Command options:
@@ -254,17 +254,17 @@ Notes:
 - `gateway install` supports `--port`, `--runtime`, `--token`, `--force`, `--json`.
 - When token auth requires a token and `gateway.auth.token` is SecretRef-managed, `gateway install` validates that the SecretRef is resolvable but does not persist the resolved token into service environment metadata.
 - If token auth requires a token and the configured token SecretRef is unresolved, install fails closed instead of persisting fallback plaintext.
-- For password auth on `gateway run`, prefer `OPENCLAW_GATEWAY_PASSWORD`, `--password-file`, or a SecretRef-backed `gateway.auth.password` over inline `--password`.
-- In inferred auth mode, shell-only `OPENCLAW_GATEWAY_PASSWORD` does not relax install token requirements; use durable config (`gateway.auth.password` or config `env`) when installing a managed service.
+- For password auth on `gateway run`, prefer `RedForge_GATEWAY_PASSWORD`, `--password-file`, or a SecretRef-backed `gateway.auth.password` over inline `--password`.
+- In inferred auth mode, shell-only `RedForge_GATEWAY_PASSWORD` does not relax install token requirements; use durable config (`gateway.auth.password` or config `env`) when installing a managed service.
 - If both `gateway.auth.token` and `gateway.auth.password` are configured and `gateway.auth.mode` is unset, install is blocked until mode is set explicitly.
 - Lifecycle commands accept `--json` for scripting.
 
 ## Discover gateways (Bonjour)
 
-`gateway discover` scans for Gateway beacons (`_openclaw-gw._tcp`).
+`gateway discover` scans for Gateway beacons (`_RedForge-gw._tcp`).
 
 - Multicast DNS-SD: `local.`
-- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `openclaw.internal.`) and set up split DNS + a DNS server; see [/gateway/bonjour](/gateway/bonjour)
+- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `RedForge.internal.`) and set up split DNS + a DNS server; see [/gateway/bonjour](/gateway/bonjour)
 
 Only gateways with Bonjour discovery enabled (default) advertise the beacon.
 
@@ -281,7 +281,7 @@ Wide-Area discovery records include (TXT):
 ### `gateway discover`
 
 ```bash
-openclaw gateway discover
+RedForge gateway discover
 ```
 
 Options:
@@ -292,8 +292,8 @@ Options:
 Examples:
 
 ```bash
-openclaw gateway discover --timeout 4000
-openclaw gateway discover --json | jq '.beacons[].wsUrl'
+RedForge gateway discover --timeout 4000
+RedForge gateway discover --json | jq '.beacons[].wsUrl'
 ```
 
 Notes:

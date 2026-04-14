@@ -9,12 +9,12 @@ title: "Discovery and Transports"
 
 # Discovery & transports
 
-OpenClaw has two distinct problems that look similar on the surface:
+RedForge has two distinct problems that look similar on the surface:
 
 1. **Operator remote control**: the macOS menu bar app controlling a gateway running elsewhere.
 2. **Node pairing**: iOS/Android (and future nodes) finding a gateway and pairing securely.
 
-The design goal is to keep all network discovery/advertising in the **Node Gateway** (`openclaw gateway`) and keep clients (mac app, iOS) as consumers.
+The design goal is to keep all network discovery/advertising in the **Node Gateway** (`RedForge gateway`) and keep clients (mac app, iOS) as consumers.
 
 ## Terms
 
@@ -46,7 +46,7 @@ Protocol details:
 
 ### 1) Bonjour / DNS-SD discovery
 
-Multicast Bonjour is best-effort and does not cross networks. OpenClaw can also browse the
+Multicast Bonjour is best-effort and does not cross networks. RedForge can also browse the
 same gateway beacon via a configured wide-area DNS-SD domain, so discovery can cover:
 
 - `local.` on the same LAN
@@ -62,7 +62,7 @@ Troubleshooting and beacon details: [Bonjour](/gateway/bonjour).
 #### Service beacon details
 
 - Service types:
-  - `_openclaw-gw._tcp` (gateway transport beacon)
+  - `_RedForge-gw._tcp` (gateway transport beacon)
 - TXT keys (non-secret):
   - `role=gateway`
   - `transport=gateway`
@@ -85,11 +85,11 @@ Security notes:
 
 Disable/override:
 
-- `OPENCLAW_DISABLE_BONJOUR=1` disables advertising.
-- `gateway.bind` in `~/.openclaw/openclaw.json` controls the Gateway bind mode.
-- `OPENCLAW_SSH_PORT` overrides the SSH port advertised when `sshPort` is emitted.
-- `OPENCLAW_TAILNET_DNS` publishes a `tailnetDns` hint (MagicDNS).
-- `OPENCLAW_CLI_PATH` overrides the advertised CLI path.
+- `RedForge_DISABLE_BONJOUR=1` disables advertising.
+- `gateway.bind` in `~/.RedForge/RedForge.json` controls the Gateway bind mode.
+- `RedForge_SSH_PORT` overrides the SSH port advertised when `sshPort` is emitted.
+- `RedForge_TAILNET_DNS` publishes a `tailnetDns` hint (MagicDNS).
+- `RedForge_CLI_PATH` overrides the advertised CLI path.
 
 ### 2) Tailnet (cross-network)
 

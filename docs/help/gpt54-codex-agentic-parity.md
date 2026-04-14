@@ -1,6 +1,6 @@
-# GPT-5.4 / Codex Agentic Parity in OpenClaw
+# GPT-5.4 / Codex Agentic Parity in RedForge
 
-OpenClaw already worked well with tool-using frontier models, but GPT-5.4 and Codex-style models were still underperforming in a few practical ways:
+RedForge already worked well with tool-using frontier models, but GPT-5.4 and Codex-style models were still underperforming in a few practical ways:
 
 - they could stop after planning instead of doing the work
 - they could use strict OpenAI/Codex tool schemas incorrectly
@@ -16,7 +16,7 @@ This parity program fixes those gaps in four reviewable slices.
 
 This slice adds an opt-in `strict-agentic` execution contract for embedded Pi GPT-5 runs.
 
-When enabled, OpenClaw stops accepting plan-only turns as “good enough” completion. If the model only says what it intends to do and does not actually use tools or make progress, OpenClaw retries with an act-now steer and then fails closed with an explicit blocked state instead of silently ending the task.
+When enabled, RedForge stops accepting plan-only turns as “good enough” completion. If the model only says what it intends to do and does not actually use tools or make progress, RedForge retries with an act-now steer and then fails closed with an explicit blocked state instead of silently ending the task.
 
 This improves the GPT-5.4 experience most on:
 
@@ -26,7 +26,7 @@ This improves the GPT-5.4 experience most on:
 
 ### PR B: runtime truthfulness
 
-This slice makes OpenClaw tell the truth about two things:
+This slice makes RedForge tell the truth about two things:
 
 - why the provider/runtime call failed
 - whether `/elevated full` is actually available
@@ -51,7 +51,7 @@ The parity pack is the proof layer. It does not change runtime behavior by itsel
 After you have two `qa-suite-summary.json` artifacts, generate the release-gate comparison with:
 
 ```bash
-pnpm openclaw qa parity-report \
+pnpm RedForge qa parity-report \
   --repo-root . \
   --candidate-summary .artifacts/qa-e2e/gpt54/qa-suite-summary.json \
   --baseline-summary .artifacts/qa-e2e/opus46/qa-suite-summary.json \
@@ -66,7 +66,7 @@ That command writes:
 
 ## Why this improves GPT-5.4 in practice
 
-Before this work, GPT-5.4 on OpenClaw could feel less agentic than Opus in real coding sessions because the runtime tolerated behaviors that are especially harmful for GPT-5-style models:
+Before this work, GPT-5.4 on RedForge could feel less agentic than Opus in real coding sessions because the runtime tolerated behaviors that are especially harmful for GPT-5-style models:
 
 - commentary-only turns
 - schema friction around tools
@@ -81,7 +81,7 @@ That changes the user experience from:
 
 to:
 
-- “the model either acted, or OpenClaw surfaced the exact reason it could not”
+- “the model either acted, or RedForge surfaced the exact reason it could not”
 
 ## Before vs after for GPT-5.4 users
 
@@ -118,7 +118,7 @@ flowchart LR
     A --> C["Run Opus 4.6 parity pack"]
     B --> D["qa-suite-summary.json"]
     C --> E["qa-suite-summary.json"]
-    D --> F["openclaw qa parity-report"]
+    D --> F["RedForge qa parity-report"]
     E --> F
     F --> G["qa-agentic-parity-report.md"]
     F --> H["qa-agentic-parity-summary.json"]

@@ -1,7 +1,7 @@
 ---
 summary: "Complete reference for CLI setup flow, auth/model setup, outputs, and internals"
 read_when:
-  - You need detailed behavior for openclaw onboard
+  - You need detailed behavior for RedForge onboard
   - You are debugging onboarding results or integrating onboarding clients
 title: "CLI Setup Reference"
 sidebarTitle: "CLI reference"
@@ -9,7 +9,7 @@ sidebarTitle: "CLI reference"
 
 # CLI Setup Reference
 
-This page is the full reference for `openclaw onboard`.
+This page is the full reference for `RedForge onboard`.
 For the short guide, see [Onboarding (CLI)](/start/wizard).
 
 ## What the wizard does
@@ -31,10 +31,10 @@ It does not install or modify anything on the remote host.
 
 <Steps>
   <Step title="Existing config detection">
-    - If `~/.openclaw/openclaw.json` exists, choose Keep, Modify, or Reset.
+    - If `~/.RedForge/RedForge.json` exists, choose Keep, Modify, or Reset.
     - Re-running the wizard does not wipe anything unless you explicitly choose Reset (or pass `--reset`).
     - CLI `--reset` defaults to `config+creds+sessions`; use `--reset-scope full` to also remove workspace.
-    - If config is invalid or contains legacy keys, the wizard stops and asks you to run `openclaw doctor` before continuing.
+    - If config is invalid or contains legacy keys, the wizard stops and asks you to run `RedForge doctor` before continuing.
     - Reset uses `trash` and offers scopes:
       - Config only
       - Config + credentials + sessions
@@ -44,7 +44,7 @@ It does not install or modify anything on the remote host.
     - Full option matrix is in [Auth and model options](#auth-and-model-options).
   </Step>
   <Step title="Workspace">
-    - Default `~/.openclaw/workspace` (configurable).
+    - Default `~/.RedForge/workspace` (configurable).
     - Seeds workspace files needed for first-run bootstrap ritual.
     - Workspace layout: [Agent workspace](/concepts/agent-workspace).
   </Step>
@@ -71,7 +71,7 @@ It does not install or modify anything on the remote host.
     - [BlueBubbles](/channels/bluebubbles): recommended for iMessage; server URL + password + webhook
     - [iMessage](/channels/imessage): legacy `imsg` CLI path + DB access
     - DM security: default is pairing. First DM sends a code; approve via
-      `openclaw pairing approve <channel> <code>` or use allowlists.
+      `RedForge pairing approve <channel> <code>` or use allowlists.
   </Step>
   <Step title="Daemon install">
     - macOS: LaunchAgent
@@ -80,13 +80,13 @@ It does not install or modify anything on the remote host.
       - Wizard attempts `loginctl enable-linger <user>` so gateway stays up after logout.
       - May prompt for sudo (writes `/var/lib/systemd/linger`); it tries without sudo first.
     - Native Windows: Scheduled Task first
-      - If task creation is denied, OpenClaw falls back to a per-user Startup-folder login item and starts the gateway immediately.
+      - If task creation is denied, RedForge falls back to a per-user Startup-folder login item and starts the gateway immediately.
       - Scheduled Tasks remain preferred because they provide better supervisor status.
     - Runtime selection: Node (recommended; required for WhatsApp and Telegram). Bun is not recommended.
   </Step>
   <Step title="Health check">
-    - Starts gateway (if needed) and runs `openclaw health`.
-    - `openclaw status --deep` adds the live gateway health probe to status output, including channel probes when supported.
+    - Starts gateway (if needed) and runs `RedForge health`.
+    - `RedForge status --deep` adds the live gateway health probe to status output, including channel probes when supported.
   </Step>
   <Step title="Skills">
     - Reads available skills and checks requirements.
@@ -131,7 +131,7 @@ What you set:
   </Accordion>
   <Accordion title="OpenAI Code subscription (Codex CLI reuse)">
     If `~/.codex/auth.json` exists, the wizard can reuse it.
-    Reused Codex CLI credentials stay managed by Codex CLI; on expiry OpenClaw
+    Reused Codex CLI credentials stay managed by Codex CLI; on expiry RedForge
     re-reads that source first and, when the provider can refresh it, writes
     the refreshed credential back to Codex storage instead of taking ownership
     itself.
@@ -223,8 +223,8 @@ Model behavior:
 
 Credential and profile paths:
 
-- Auth profiles (API keys + OAuth): `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-- Legacy OAuth import: `~/.openclaw/credentials/oauth.json`
+- Auth profiles (API keys + OAuth): `~/.RedForge/agents/<agentId>/agent/auth-profiles.json`
+- Legacy OAuth import: `~/.RedForge/credentials/oauth.json`
 
 Credential storage mode:
 
@@ -251,14 +251,14 @@ Credential storage mode:
 <Note>
 Headless and server tip: complete OAuth on a machine with a browser, then copy
 that agent's `auth-profiles.json` (for example
-`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, or the matching
-`$OPENCLAW_STATE_DIR/...` path) to the gateway host. `credentials/oauth.json`
+`~/.RedForge/agents/<agentId>/agent/auth-profiles.json`, or the matching
+`$RedForge_STATE_DIR/...` path) to the gateway host. `credentials/oauth.json`
 is only a legacy import source.
 </Note>
 
 ## Outputs and internals
 
-Typical fields in `~/.openclaw/openclaw.json`:
+Typical fields in `~/.RedForge/RedForge.json`:
 
 - `agents.defaults.workspace`
 - `agents.defaults.model` / `models.providers` (if Minimax chosen)
@@ -276,10 +276,10 @@ Typical fields in `~/.openclaw/openclaw.json`:
 - `wizard.lastRunCommand`
 - `wizard.lastRunMode`
 
-`openclaw agents add` writes `agents.list[]` and optional `bindings`.
+`RedForge agents add` writes `agents.list[]` and optional `bindings`.
 
-WhatsApp credentials go under `~/.openclaw/credentials/whatsapp/<accountId>/`.
-Sessions are stored under `~/.openclaw/agents/<agentId>/sessions/`.
+WhatsApp credentials go under `~/.RedForge/credentials/whatsapp/<accountId>/`.
+Sessions are stored under `~/.RedForge/agents/<agentId>/sessions/`.
 
 <Note>
 Some channels are delivered as plugins. When selected during setup, the wizard
@@ -298,7 +298,7 @@ Clients (macOS app and Control UI) can render steps without re-implementing onbo
 Signal setup behavior:
 
 - Downloads the appropriate release asset
-- Stores it under `~/.openclaw/tools/signal-cli/<version>/`
+- Stores it under `~/.RedForge/tools/signal-cli/<version>/`
 - Writes `channels.signal.cliPath` in config
 - JVM builds require Java 21
 - Native builds are used when available
@@ -308,4 +308,4 @@ Signal setup behavior:
 
 - Onboarding hub: [Onboarding (CLI)](/start/wizard)
 - Automation and scripts: [CLI Automation](/start/wizard-cli-automation)
-- Command reference: [`openclaw onboard`](/cli/onboard)
+- Command reference: [`RedForge onboard`](/cli/onboard)

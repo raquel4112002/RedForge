@@ -1,11 +1,11 @@
 ---
-summary: "CLI reference for `openclaw pairing` (approve/list pairing requests)"
+summary: "CLI reference for `RedForge pairing` (approve/list pairing requests)"
 read_when:
   - You’re using pairing-mode DMs and need to approve senders
 title: "pairing"
 ---
 
-# `openclaw pairing`
+# `RedForge pairing`
 
 Approve or inspect DM pairing requests (for channels that support pairing).
 
@@ -16,13 +16,13 @@ Related:
 ## Commands
 
 ```bash
-openclaw pairing list telegram
-openclaw pairing list --channel telegram --account work
-openclaw pairing list telegram --json
+RedForge pairing list telegram
+RedForge pairing list --channel telegram --account work
+RedForge pairing list telegram --json
 
-openclaw pairing approve <code>
-openclaw pairing approve telegram <code>
-openclaw pairing approve --channel telegram --account work <code> --notify
+RedForge pairing approve <code>
+RedForge pairing approve telegram <code>
+RedForge pairing approve --channel telegram --account work <code> --notify
 ```
 
 ## `pairing list`
@@ -47,9 +47,9 @@ Approve a pending pairing code and allow that sender.
 
 Usage:
 
-- `openclaw pairing approve <channel> <code>`
-- `openclaw pairing approve --channel <channel> <code>`
-- `openclaw pairing approve <code>` when exactly one pairing-capable channel is configured
+- `RedForge pairing approve <channel> <code>`
+- `RedForge pairing approve --channel <channel> <code>`
+- `RedForge pairing approve <code>` when exactly one pairing-capable channel is configured
 
 Options:
 
