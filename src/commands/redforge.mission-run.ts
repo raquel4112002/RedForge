@@ -5,6 +5,7 @@ import { agentCommand } from "../agents/agent-command.js";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { DEFAULT_AGENT_WORKSPACE_DIR } from "../agents/workspace.js";
 import { loadConfig } from "../config/config.js";
+import type { PlannerMetadata } from "../redforge/planner/mission-plan-types.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { defaultRuntime } from "../runtime.js";
 import { shortenHomePath } from "../utils.js";
@@ -33,6 +34,17 @@ type RunState = {
   failedAt?: string;
   error?: string;
   execution: RunExecutionConfig;
+  planner?: PlannerMetadata;
+};
+
+export type RedForgeMissionRunResult = {
+  runId: string;
+  runDir: string;
+  artifactDir: string;
+  reportMarkdownPath: string;
+  reportJsonPath: string;
+  status: RunStatus;
+  dryRun: boolean;
 };
 
 function generateRunId(): string {
@@ -146,6 +158,17 @@ function normalizeOutputs(value: unknown): string[] {
   return ["findings", "artifacts", "report"];
 }
 
+function parsePlannerMetadata(value: unknown): PlannerMetadata | undefined {
+  if (typeof value !== "string" || !value.trim()) {
+    return undefined;
+  }
+  try {
+    return JSON.parse(value) as PlannerMetadata;
+  } catch {
+    return undefined;
+  }
+}
+
 function buildRedForgeMissionPrompt(params: {
   runId: string;
   missionId: string;
@@ -153,6 +176,7 @@ function buildRedForgeMissionPrompt(params: {
   target: ParsedSimpleYaml;
   scope: ParsedSimpleYaml;
   execution: RunExecutionConfig;
+  planner?: PlannerMetadata;
 }): string {
   const scopeAllowedTargets = Array.isArray(params.scope.allowedTargets)
     ? params.scope.allowedTargets.map((entry) => stringifyScalar(entry))
@@ -162,6 +186,19 @@ function buildRedForgeMissionPrompt(params: {
     : [];
   const scopeForbiddenActions = Array.isArray(params.scope.forbiddenActions)
     ? params.scope.forbiddenActions.map((entry) => stringifyScalar(entry))
+    : [];
+  const plannerLines = params.planner
+    ? [
+        "",
+        "Planner metadata:",
+        `- prompt: ${params.planner.prompt}`,
+        `- confidence: ${params.planner.confidence}`,
+        `- suggested next action: ${params.planner.suggestedNextAction}`,
+        `- intent kind: ${params.planner.intent.kind}`,
+        `- intent scopeKind: ${params.planner.intent.scopeKind}`,
+        `- planner warnings: ${params.planner.warnings.join(", ") || "(none)"}`,
+        `- tool families: ${params.planner.toolFamilies.join(", ") || "(none)"}`,
+      ]
     : [];
 
   return [
@@ -177,6 +214,7 @@ function buildRedForgeMissionPrompt(params: {
     `- dry-run: ${params.execution.dryRun ? "yes" : "no"}`,
     `- execution model override: ${params.execution.model ?? "(default)"}`,
     `- execution base URL override: ${params.execution.baseUrl ?? "(default)"}`,
+    ...plannerLines,
     "",
     "Target:",
     `- id: ${stringifyScalar(params.target.id)}`,
@@ -274,7 +312,7 @@ export async function redforgeMissionRunCommand(
     agent?: string;
   },
   runtime: RuntimeEnv = defaultRuntime,
-): Promise<void> {
+): Promise<RedForgeMissionRunResult> {
   const workspaceDir =
     typeof opts.workspace === "string" && opts.workspace.trim().length > 0
       ? opts.workspace.trim()
@@ -291,6 +329,7 @@ export async function redforgeMissionRunCommand(
   const missionPath = path.join(workspaceDir, "MISSIONS", `${missionId}.yaml`);
   await assertPathExists(missionPath, "Mission file");
   const mission = await readYamlFile(missionPath);
+  const planner = parsePlannerMetadata(mission.planner);
   const targetId = requireNonEmpty(stringifyScalar(mission.target), "mission.target");
   const scopeId = requireNonEmpty(stringifyScalar(mission.scope), "mission.scope");
   const targetPath = path.join(workspaceDir, "TARGETS", `${targetId}.yaml`);
@@ -330,6 +369,7 @@ export async function redforgeMissionRunCommand(
     scope: scopeId,
     createdAt,
     execution,
+    planner,
   };
 
   await writeRunState(runDir, runState);
@@ -339,6 +379,7 @@ export async function redforgeMissionRunCommand(
     runId,
     mission: missionId,
     execution,
+    planner,
   });
   await appendJsonl(stateTransitionsPath, {
     at: createdAt,
@@ -356,6 +397,7 @@ export async function redforgeMissionRunCommand(
       type: "run.started",
       runId,
       execution,
+      planner,
     });
     await appendJsonl(stateTransitionsPath, {
       at: startedAt,
@@ -367,6 +409,7 @@ export async function redforgeMissionRunCommand(
       mission,
       target,
       scope,
+      planner,
       run: {
         id: runId,
         runDir,
@@ -402,6 +445,7 @@ export async function redforgeMissionRunCommand(
         target,
         scope,
         execution,
+        planner,
       }),
       skipped: execution.dryRun,
     };
@@ -493,6 +537,13 @@ export async function redforgeMissionRunCommand(
         `- Model: ${execution.model ?? "(default)"}`,
         `- Base URL: ${execution.baseUrl ?? "(default)"}`,
         `- Outputs: ${execution.outputs.join(", ")}`,
+        ...(planner
+          ? [
+              `- Planned from prompt: ${planner.prompt}`,
+              `- Planner confidence: ${planner.confidence}`,
+              `- Planner intent: ${planner.intent.kind} / ${planner.intent.scopeKind}`,
+            ]
+          : []),
         "",
         "## Agent Output",
         "",
@@ -510,6 +561,7 @@ export async function redforgeMissionRunCommand(
       status: runState.status,
       findings: [],
       execution,
+      planner,
       agentExecution: {
         skipped: agentExecution.skipped,
         outputText: agentExecution.outputText ?? null,
@@ -519,6 +571,16 @@ export async function redforgeMissionRunCommand(
     runtime.log(`RedForge run created: ${shortenHomePath(runDir)}`);
     runtime.log(`RedForge artifacts ready: ${shortenHomePath(artifactDir)}`);
     runtime.log(`RedForge report written: ${shortenHomePath(reportMarkdownPath)}`);
+
+    return {
+      runId,
+      runDir,
+      artifactDir,
+      reportMarkdownPath,
+      reportJsonPath,
+      status: runState.status,
+      dryRun: execution.dryRun,
+    };
   } catch (error) {
     const failedAt = new Date().toISOString();
     runState.status = "failed";

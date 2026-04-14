@@ -1,5 +1,6 @@
 import path from "node:path";
 import { DEFAULT_AGENT_WORKSPACE_DIR } from "../agents/workspace.js";
+import type { PlannerMetadata } from "../redforge/planner/mission-plan-types.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { defaultRuntime } from "../runtime.js";
 import { shortenHomePath } from "../utils.js";
@@ -20,6 +21,7 @@ function renderMissionYaml(params: {
   scope: string;
   mode: string;
   outputs: string[];
+  planner?: PlannerMetadata;
 }): string {
   return [
     `id: ${yamlScalar(params.id)}`,
@@ -28,6 +30,7 @@ function renderMissionYaml(params: {
     `scope: ${yamlScalar(params.scope)}`,
     `mode: ${yamlScalar(params.mode)}`,
     `outputs: ${yamlList(params.outputs)}`,
+    ...(params.planner ? [`planner: ${yamlScalar(JSON.stringify(params.planner))}`] : []),
     "",
   ].join("\n");
 }
@@ -41,6 +44,7 @@ export async function redforgeMissionCreateCommand(
     scope?: string;
     mode?: string;
     output?: string[] | string;
+    planner?: PlannerMetadata;
     force?: boolean;
   },
   runtime: RuntimeEnv = defaultRuntime,
@@ -83,6 +87,7 @@ export async function redforgeMissionCreateCommand(
       scope,
       mode,
       outputs: outputs.length > 0 ? outputs : ["findings", "artifacts", "report"],
+      planner: opts.planner,
     }),
     "utf-8",
   );

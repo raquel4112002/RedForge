@@ -33,6 +33,22 @@ export type InferredMissionIntent = {
 export type PlannerConfidence = "high" | "medium" | "low";
 export type PlannerNextAction = "apply" | "apply-and-run" | "ask-for-clarification";
 
+export type PlannerMetadata = {
+  version: 1;
+  source: "redforge-mission-plan";
+  prompt: string;
+  confidence: PlannerConfidence;
+  suggestedNextAction: PlannerNextAction;
+  warnings: string[];
+  toolFamilies: string[];
+  intent: {
+    kind: InferredMissionIntent["kind"];
+    scopeKind: InferredMissionIntent["scopeKind"];
+    rationale: string[];
+  };
+  plannedAt: string;
+};
+
 export type MissionPlan = {
   workspaceDir: string;
   prompt: string;
@@ -44,6 +60,7 @@ export type MissionPlan = {
   confidence: PlannerConfidence;
   suggestedNextAction: PlannerNextAction;
   toolFamilies: string[];
+  planner: PlannerMetadata;
 };
 
 export type MissionIntentGateAction = "apply" | "clarify" | "refuse" | "noop";

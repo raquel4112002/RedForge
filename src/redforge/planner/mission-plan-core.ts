@@ -12,6 +12,7 @@ import type {
   PlannedScope,
   PlannedTarget,
   PlannerConfidence,
+  PlannerMetadata,
   PlannerNextAction,
 } from "./mission-plan-types.js";
 
@@ -170,6 +171,22 @@ export function buildMissionPlan(prompt: string, workspaceDir: string): MissionP
     warnings,
   });
   const suggestedNextAction = inferSuggestedNextAction({ confidence, warnings });
+  const planner: PlannerMetadata = {
+    version: 1,
+    source: "redforge-mission-plan",
+    prompt: normalizedPrompt,
+    confidence,
+    suggestedNextAction,
+    warnings: [...warnings],
+    toolFamilies: [...toolFamilies],
+    intent: {
+      kind: intent.kind,
+      scopeKind: intent.scopeKind,
+      rationale: [...intent.rationale],
+    },
+    plannedAt: new Date().toISOString(),
+  };
+
   return {
     workspaceDir,
     prompt: normalizedPrompt,
@@ -181,5 +198,6 @@ export function buildMissionPlan(prompt: string, workspaceDir: string): MissionP
     confidence,
     suggestedNextAction,
     toolFamilies,
+    planner,
   };
 }

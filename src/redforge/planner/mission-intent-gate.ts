@@ -20,12 +20,14 @@ const MISSION_KEYWORDS = [
 ] as const;
 
 const INFORMATIONAL_PATTERNS = [
-  /\bwhat is\b/iu,
-  /\bexplain\b/iu,
-  /\bdifference between\b/iu,
-  /\bsummarize\b/iu,
-  /\brewrite\b/iu,
-  /\btranslate\b/iu,
+  /^\s*what is\b/iu,
+  /^\s*what are\b/iu,
+  /^\s*explain\b/iu,
+  /^\s*describe\b/iu,
+  /^\s*summarize\b/iu,
+  /^\s*rewrite\b/iu,
+  /^\s*translate\b/iu,
+  /^\s*tell me about\b/iu,
 ] as const;
 
 export function detectTargetValue(prompt: string): {
@@ -47,9 +49,11 @@ export function detectTargetValue(prompt: string): {
     return { type: "domain", value: domainMatch[0].toLowerCase() };
   }
 
-  const hostMatch = prompt.match(/\b[a-z0-9][a-z0-9-]{1,62}\b/iu);
-  if (hostMatch) {
-    return { type: "hostname", value: hostMatch[0] };
+  const contextualHostMatch = prompt.match(
+    /\b(?:host|hostname|target|against)\s+([a-z0-9][a-z0-9-]{1,62})\b/iu,
+  );
+  if (contextualHostMatch) {
+    return { type: "hostname", value: contextualHostMatch[1] };
   }
 
   throw new Error("Could not infer target from prompt");
@@ -150,7 +154,7 @@ export function gateMissionIntent(prompt: string): MissionIntentGateResult {
   const isInformational = INFORMATIONAL_PATTERNS.some((pattern) => pattern.test(normalizedPrompt));
   const looksOperational = MISSION_KEYWORDS.some((keyword) => lower.includes(keyword));
 
-  if (isInformational && !looksOperational) {
+  if (isInformational) {
     return {
       accepted: false,
       action: "noop",
@@ -162,17 +166,14 @@ export function gateMissionIntent(prompt: string): MissionIntentGateResult {
     };
   }
 
-  let target: MissionIntentGateResult["target"];
+  let target: ReturnType<typeof detectTargetValue> | undefined;
   try {
     target = detectTargetValue(normalizedPrompt);
   } catch {
     target = undefined;
   }
 
-  const intent =
-    target && target.type !== "unknown"
-      ? inferMissionIntent(normalizedPrompt, target.type)
-      : undefined;
+  const intent = target ? inferMissionIntent(normalizedPrompt, target.type) : undefined;
   const warnings = inferGateWarnings({
     prompt: normalizedPrompt,
     target,
@@ -184,6 +185,21 @@ export function gateMissionIntent(prompt: string): MissionIntentGateResult {
     warnings,
   });
 
+  if (!target && looksOperational) {
+    return {
+      accepted: false,
+      action: "clarify",
+      confidence,
+      prompt: normalizedPrompt,
+      warnings,
+      questions: [
+        "Which target should RedForge plan against?",
+        "Should this be treated as web, host, or broader environment assessment?",
+      ],
+      rationale: ["prompt suggests an operational task but no target could be inferred"],
+    };
+  }
+
   if (!looksOperational && !target) {
     return {
       accepted: false,
@@ -193,19 +209,6 @@ export function gateMissionIntent(prompt: string): MissionIntentGateResult {
       warnings,
       questions: [],
       rationale: ["prompt does not clearly describe a RedForge mission"],
-    };
-  }
-
-  if (!target) {
-    return {
-      accepted: false,
-      action: "clarify",
-      confidence,
-      prompt: normalizedPrompt,
-      intent,
-      warnings,
-      questions: ["Which target should RedForge plan against?"],
-      rationale: ["prompt suggests an operational task but no target could be inferred"],
     };
   }
 
