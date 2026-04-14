@@ -1,4 +1,4 @@
-# MiniMax (OpenClaw plugin)
+# MiniMax (RedForge plugin)
 
 Bundled MiniMax plugin for both:
 
@@ -8,13 +8,13 @@ Bundled MiniMax plugin for both:
 ## Enable
 
 ```bash
-openclaw plugins enable minimax
+RedForge plugins enable minimax
 ```
 
 Restart the Gateway after enabling.
 
 ```bash
-openclaw gateway restart
+RedForge gateway restart
 ```
 
 ## Authenticate
@@ -22,13 +22,13 @@ openclaw gateway restart
 OAuth:
 
 ```bash
-openclaw models auth login --provider minimax-portal --set-default
+RedForge models auth login --provider minimax-portal --set-default
 ```
 
 API key:
 
 ```bash
-openclaw setup --wizard --auth-choice minimax-global-api
+RedForge setup --wizard --auth-choice minimax-global-api
 ```
 
 ## Notes

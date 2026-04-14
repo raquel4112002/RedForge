@@ -463,7 +463,7 @@ export async function monitorWebChannel(
         healthState: "logged-out",
       });
       runtime.error(
-        `WhatsApp session logged out. Run \`${formatCliCommand("openclaw channels login --channel web")}\` to relink.`,
+        `WhatsApp session logged out. Run \`${formatCliCommand("redforge channels login --channel web")}\` to relink.`,
       );
       await closeListener();
       break;
@@ -486,7 +486,7 @@ export async function monitorWebChannel(
         "web reconnect: non-retryable close status; stopping monitor",
       );
       runtime.error(
-        `WhatsApp Web connection closed (status ${statusCode}: session conflict). Resolve conflicting WhatsApp Web sessions, then relink with \`${formatCliCommand("openclaw channels login --channel web")}\`. Stopping web monitoring.`,
+        `WhatsApp Web connection closed (status ${statusCode}: session conflict). Resolve conflicting WhatsApp Web sessions, then relink with \`${formatCliCommand("redforge channels login --channel web")}\`. Stopping web monitoring.`,
       );
       await closeListener();
       break;

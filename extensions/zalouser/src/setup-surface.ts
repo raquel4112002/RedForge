@@ -164,7 +164,7 @@ async function promptZalouserAllowFrom(params: {
         [
           "No DM allowlist entries added yet.",
           "Direct chats will stay blocked until you add people later.",
-          `Tip: use \`${formatCliCommand("openclaw directory peers list --channel zalouser")}\` to look up people after onboarding.`,
+          `Tip: use \`${formatCliCommand("redforge directory peers list --channel zalouser")}\` to look up people after onboarding.`,
         ].join("\n"),
         ZALOUSER_ALLOWLIST_TITLE,
       );
@@ -418,7 +418,7 @@ export const zalouserSetupWizard: ChannelSetupWizard = {
           [
             "No group allowlist entries added yet.",
             "Group chats will stay blocked until you add groups later.",
-            `Tip: use \`${formatCliCommand("openclaw directory groups list --channel zalouser")}\` after onboarding to find group IDs.`,
+            `Tip: use \`${formatCliCommand("redforge directory groups list --channel zalouser")}\` after onboarding to find group IDs.`,
             "Mention requirement stays on by default for groups you allow later.",
           ].join("\n"),
           ZALOUSER_GROUPS_TITLE,

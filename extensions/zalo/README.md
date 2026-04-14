@@ -1,17 +1,17 @@
-# @openclaw/zalo
+# @RedForge/zalo
 
-Zalo channel plugin for OpenClaw (Bot API).
+Zalo channel plugin for RedForge (Bot API).
 
 ## Install (local checkout)
 
 ```bash
-openclaw plugins install ./path/to/local/zalo-plugin
+RedForge plugins install ./path/to/local/zalo-plugin
 ```
 
 ## Install (npm)
 
 ```bash
-openclaw plugins install @openclaw/zalo
+RedForge plugins install @RedForge/zalo
 ```
 
 Onboarding: select Zalo and confirm the install prompt to fetch the plugin automatically.

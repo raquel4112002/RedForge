@@ -380,7 +380,7 @@ export async function finalizeWhatsAppSetup(params: {
     }
   } else if (!linked) {
     await params.prompter.note(
-      `Run \`${formatCliCommand("openclaw channels login")}\` later to link WhatsApp.`,
+      `Run \`${formatCliCommand("redforge channels login")}\` later to link WhatsApp.`,
       "WhatsApp",
     );
   }
