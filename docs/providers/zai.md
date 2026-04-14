@@ -1,7 +1,7 @@
 ---
-summary: "Use Z.AI (GLM models) with OpenClaw"
+summary: "Use Z.AI (GLM models) with RedForge"
 read_when:
-  - You want Z.AI / GLM models in OpenClaw
+  - You want Z.AI / GLM models in RedForge
   - You need a simple ZAI_API_KEY setup
 title: "Z.AI"
 ---
@@ -9,7 +9,7 @@ title: "Z.AI"
 # Z.AI
 
 Z.AI is the API platform for **GLM** models. It provides REST APIs for GLM and uses API keys
-for authentication. Create your API key in the Z.AI console. OpenClaw uses the `zai` provider
+for authentication. Create your API key in the Z.AI console. RedForge uses the `zai` provider
 with a Z.AI API key.
 
 - Provider: `zai`
@@ -20,12 +20,12 @@ with a Z.AI API key.
 
 <Tabs>
   <Tab title="Auto-detect endpoint">
-    **Best for:** most users. OpenClaw detects the matching Z.AI endpoint from the key and applies the correct base URL automatically.
+    **Best for:** most users. RedForge detects the matching Z.AI endpoint from the key and applies the correct base URL automatically.
 
     <Steps>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice zai-api-key
+        RedForge onboard --auth-choice zai-api-key
         ```
       </Step>
       <Step title="Set a default model">
@@ -38,7 +38,7 @@ with a Z.AI API key.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider zai
+        RedForge models list --provider zai
         ```
       </Step>
     </Steps>
@@ -52,16 +52,16 @@ with a Z.AI API key.
       <Step title="Pick the right onboarding choice">
         ```bash
         # Coding Plan Global (recommended for Coding Plan users)
-        openclaw onboard --auth-choice zai-coding-global
+        RedForge onboard --auth-choice zai-coding-global
 
         # Coding Plan CN (China region)
-        openclaw onboard --auth-choice zai-coding-cn
+        RedForge onboard --auth-choice zai-coding-cn
 
         # General API
-        openclaw onboard --auth-choice zai-global
+        RedForge onboard --auth-choice zai-global
 
         # General API CN (China region)
-        openclaw onboard --auth-choice zai-cn
+        RedForge onboard --auth-choice zai-cn
         ```
       </Step>
       <Step title="Set a default model">
@@ -74,7 +74,7 @@ with a Z.AI API key.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider zai
+        RedForge models list --provider zai
         ```
       </Step>
     </Steps>
@@ -84,7 +84,7 @@ with a Z.AI API key.
 
 ## Bundled GLM catalog
 
-OpenClaw currently seeds the bundled `zai` provider with:
+RedForge currently seeds the bundled `zai` provider with:
 
 | Model ref            | Notes         |
 | -------------------- | ------------- |

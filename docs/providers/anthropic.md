@@ -1,20 +1,20 @@
 ---
-summary: "Use Anthropic Claude via API keys or Claude CLI in OpenClaw"
+summary: "Use Anthropic Claude via API keys or Claude CLI in RedForge"
 read_when:
-  - You want to use Anthropic models in OpenClaw
+  - You want to use Anthropic models in RedForge
 title: "Anthropic"
 ---
 
 # Anthropic (Claude)
 
-Anthropic builds the **Claude** model family. OpenClaw supports two auth routes:
+Anthropic builds the **Claude** model family. RedForge supports two auth routes:
 
 - **API key** — direct Anthropic API access with usage-based billing (`anthropic/*` models)
 - **Claude CLI** — reuse an existing Claude CLI login on the same host
 
 <Warning>
-Anthropic staff told us OpenClaw-style Claude CLI usage is allowed again, so
-OpenClaw treats Claude CLI reuse and `claude -p` usage as sanctioned unless
+Anthropic staff told us RedForge-style Claude CLI usage is allowed again, so
+RedForge treats Claude CLI reuse and `claude -p` usage as sanctioned unless
 Anthropic publishes a new policy.
 
 For long-lived gateway hosts, Anthropic API keys are still the clearest and
@@ -40,19 +40,19 @@ Anthropic's current public docs:
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard
+        RedForge onboard
         # choose: Anthropic API key
         ```
 
         Or pass the key directly:
 
         ```bash
-        openclaw onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
+        RedForge onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
         ```
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider anthropic
+        RedForge models list --provider anthropic
         ```
       </Step>
     </Steps>
@@ -81,15 +81,15 @@ Anthropic's current public docs:
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard
+        RedForge onboard
         # choose: Claude CLI
         ```
 
-        OpenClaw detects and reuses the existing Claude CLI credentials.
+        RedForge detects and reuses the existing Claude CLI credentials.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider anthropic
+        RedForge models list --provider anthropic
         ```
       </Step>
     </Steps>
@@ -99,7 +99,7 @@ Anthropic's current public docs:
     </Note>
 
     <Tip>
-    If you want the clearest billing path, use an Anthropic API key instead. OpenClaw also supports subscription-style options from [OpenAI Codex](/providers/openai), [Qwen Cloud](/providers/qwen), [MiniMax](/providers/minimax), and [Z.AI / GLM](/providers/glm).
+    If you want the clearest billing path, use an Anthropic API key instead. RedForge also supports subscription-style options from [OpenAI Codex](/providers/openai), [Qwen Cloud](/providers/qwen), [MiniMax](/providers/minimax), and [Z.AI / GLM](/providers/glm).
     </Tip>
 
   </Tab>
@@ -107,7 +107,7 @@ Anthropic's current public docs:
 
 ## Thinking defaults (Claude 4.6)
 
-Claude 4.6 models default to `adaptive` thinking in OpenClaw when no explicit thinking level is set.
+Claude 4.6 models default to `adaptive` thinking in RedForge when no explicit thinking level is set.
 
 Override per-message with `/think:<level>` or in model params:
 
@@ -133,7 +133,7 @@ Related Anthropic docs:
 
 ## Prompt caching
 
-OpenClaw supports Anthropic's prompt caching feature for API-key auth.
+RedForge supports Anthropic's prompt caching feature for API-key auth.
 
 | Value               | Cache duration | Description                            |
 | ------------------- | -------------- | -------------------------------------- |
@@ -198,7 +198,7 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
 
 <AccordionGroup>
   <Accordion title="Fast mode">
-    OpenClaw's shared `/fast` toggle supports direct Anthropic traffic (API-key and OAuth to `api.anthropic.com`).
+    RedForge's shared `/fast` toggle supports direct Anthropic traffic (API-key and OAuth to `api.anthropic.com`).
 
     | Command | Maps to |
     |---------|---------|
@@ -228,7 +228,7 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
   </Accordion>
 
   <Accordion title="Media understanding (image and PDF)">
-    The bundled Anthropic plugin registers image and PDF understanding. OpenClaw
+    The bundled Anthropic plugin registers image and PDF understanding. RedForge
     auto-resolves media capabilities from the configured Anthropic auth — no
     additional config is needed.
 
@@ -237,7 +237,7 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
     | Default model  | `claude-opus-4-6`    |
     | Supported input | Images, PDF documents |
 
-    When an image or PDF is attached to a conversation, OpenClaw automatically
+    When an image or PDF is attached to a conversation, RedForge automatically
     routes it through the Anthropic media understanding provider.
 
   </Accordion>
@@ -259,10 +259,10 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
     }
     ```
 
-    OpenClaw maps this to `anthropic-beta: context-1m-2025-08-07` on requests.
+    RedForge maps this to `anthropic-beta: context-1m-2025-08-07` on requests.
 
     <Warning>
-    Requires long-context access on your Anthropic credential. Legacy token auth (`sk-ant-oat-*`) is rejected for 1M context requests — OpenClaw logs a warning and falls back to the standard context window.
+    Requires long-context access on your Anthropic credential. Legacy token auth (`sk-ant-oat-*`) is rejected for 1M context requests — RedForge logs a warning and falls back to the standard context window.
     </Warning>
 
   </Accordion>
@@ -276,15 +276,15 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
   </Accordion>
 
   <Accordion title='No API key found for provider "anthropic"'>
-    Auth is **per agent**. New agents don't inherit the main agent's keys. Re-run onboarding for that agent, or configure an API key on the gateway host, then verify with `openclaw models status`.
+    Auth is **per agent**. New agents don't inherit the main agent's keys. Re-run onboarding for that agent, or configure an API key on the gateway host, then verify with `RedForge models status`.
   </Accordion>
 
   <Accordion title='No credentials found for profile "anthropic:default"'>
-    Run `openclaw models status` to see which auth profile is active. Re-run onboarding, or configure an API key for that profile path.
+    Run `RedForge models status` to see which auth profile is active. Re-run onboarding, or configure an API key for that profile path.
   </Accordion>
 
   <Accordion title="No available auth profile (all in cooldown)">
-    Check `openclaw models status --json` for `auth.unusableProfiles`. Anthropic rate-limit cooldowns can be model-scoped, so a sibling Anthropic model may still be usable. Add another Anthropic profile or wait for cooldown.
+    Check `RedForge models status --json` for `auth.unusableProfiles`. Anthropic rate-limit cooldowns can be model-scoped, so a sibling Anthropic model may still be usable. Add another Anthropic profile or wait for cooldown.
   </Accordion>
 </AccordionGroup>
 

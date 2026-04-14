@@ -2,7 +2,7 @@
 title: "Chutes"
 summary: "Chutes setup (OAuth or API key, model discovery, aliases)"
 read_when:
-  - You want to use Chutes with OpenClaw
+  - You want to use Chutes with RedForge
   - You need the OAuth or API key setup path
   - You want the default model, aliases, or discovery behavior
 ---
@@ -10,7 +10,7 @@ read_when:
 # Chutes
 
 [Chutes](https://chutes.ai) exposes open-source model catalogs through an
-OpenAI-compatible API. OpenClaw supports both browser OAuth and direct API-key
+OpenAI-compatible API. RedForge supports both browser OAuth and direct API-key
 auth for the bundled `chutes` provider.
 
 | Property | Value                        |
@@ -27,10 +27,10 @@ auth for the bundled `chutes` provider.
     <Steps>
       <Step title="Run the OAuth onboarding flow">
         ```bash
-        openclaw onboard --auth-choice chutes
+        RedForge onboard --auth-choice chutes
         ```
-        OpenClaw launches the browser flow locally, or shows a URL + redirect-paste
-        flow on remote/headless hosts. OAuth tokens auto-refresh through OpenClaw auth
+        RedForge launches the browser flow locally, or shows a URL + redirect-paste
+        flow on remote/headless hosts. OAuth tokens auto-refresh through RedForge auth
         profiles.
       </Step>
       <Step title="Verify the default model">
@@ -48,7 +48,7 @@ auth for the bundled `chutes` provider.
       </Step>
       <Step title="Run the API key onboarding flow">
         ```bash
-        openclaw onboard --auth-choice chutes-api-key
+        RedForge onboard --auth-choice chutes-api-key
         ```
       </Step>
       <Step title="Verify the default model">
@@ -68,13 +68,13 @@ Both auth paths register the bundled Chutes catalog and set the default model to
 
 ## Discovery behavior
 
-When Chutes auth is available, OpenClaw queries the Chutes catalog with that
-credential and uses the discovered models. If discovery fails, OpenClaw falls
+When Chutes auth is available, RedForge queries the Chutes catalog with that
+credential and uses the discovered models. If discovery fails, RedForge falls
 back to a bundled static catalog so onboarding and startup still work.
 
 ## Default aliases
 
-OpenClaw registers three convenience aliases for the bundled Chutes catalog:
+RedForge registers three convenience aliases for the bundled Chutes catalog:
 
 | Alias           | Target model                                          |
 | --------------- | ----------------------------------------------------- |

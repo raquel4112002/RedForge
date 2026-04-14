@@ -2,7 +2,7 @@
 title: "DeepSeek"
 summary: "DeepSeek setup (auth + model selection)"
 read_when:
-  - You want to use DeepSeek with OpenClaw
+  - You want to use DeepSeek with RedForge
   - You need the API key env var or CLI auth choice
 ---
 
@@ -25,7 +25,7 @@ read_when:
   </Step>
   <Step title="Run onboarding">
     ```bash
-    openclaw onboard --auth-choice deepseek-api-key
+    RedForge onboard --auth-choice deepseek-api-key
     ```
 
     This will prompt for your API key and set `deepseek/deepseek-chat` as the default model.
@@ -33,7 +33,7 @@ read_when:
   </Step>
   <Step title="Verify models are available">
     ```bash
-    openclaw models list --provider deepseek
+    RedForge models list --provider deepseek
     ```
   </Step>
 </Steps>
@@ -43,7 +43,7 @@ read_when:
     For scripted or headless installations, pass all flags directly:
 
     ```bash
-    openclaw onboard --non-interactive \
+    RedForge onboard --non-interactive \
       --mode local \
       --auth-choice deepseek-api-key \
       --deepseek-api-key "$DEEPSEEK_API_KEY" \
@@ -56,7 +56,7 @@ read_when:
 
 <Warning>
 If the Gateway runs as a daemon (launchd/systemd), make sure `DEEPSEEK_API_KEY`
-is available to that process (for example, in `~/.openclaw/.env` or via
+is available to that process (for example, in `~/.RedForge/.env` or via
 `env.shellEnv`).
 </Warning>
 

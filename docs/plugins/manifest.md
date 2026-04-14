@@ -1,14 +1,14 @@
 ---
 summary: "Plugin manifest + JSON schema requirements (strict config validation)"
 read_when:
-  - You are building an OpenClaw plugin
+  - You are building an RedForge plugin
   - You need to ship a plugin config schema or debug plugin validation errors
 title: "Plugin Manifest"
 ---
 
-# Plugin manifest (openclaw.plugin.json)
+# Plugin manifest (RedForge.plugin.json)
 
-This page is for the **native OpenClaw plugin manifest** only.
+This page is for the **native RedForge plugin manifest** only.
 
 For compatible bundle layouts, see [Plugin bundles](/plugins/bundles).
 
@@ -19,16 +19,16 @@ Compatible bundle formats use different manifest files:
   layout without a manifest
 - Cursor bundle: `.cursor-plugin/plugin.json`
 
-OpenClaw auto-detects those bundle layouts too, but they are not validated
-against the `openclaw.plugin.json` schema described here.
+RedForge auto-detects those bundle layouts too, but they are not validated
+against the `RedForge.plugin.json` schema described here.
 
-For compatible bundles, OpenClaw currently reads bundle metadata plus declared
+For compatible bundles, RedForge currently reads bundle metadata plus declared
 skill roots, Claude command roots, Claude bundle `settings.json` defaults,
 Claude bundle LSP defaults, and supported hook packs when the layout matches
-OpenClaw runtime expectations.
+RedForge runtime expectations.
 
-Every native OpenClaw plugin **must** ship a `openclaw.plugin.json` file in the
-**plugin root**. OpenClaw uses this manifest to validate configuration
+Every native RedForge plugin **must** ship a `RedForge.plugin.json` file in the
+**plugin root**. RedForge uses this manifest to validate configuration
 **without executing plugin code**. Missing or invalid manifests are treated as
 plugin errors and block config validation.
 
@@ -38,7 +38,7 @@ For the native capability model and current external-compatibility guidance:
 
 ## What this file does
 
-`openclaw.plugin.json` is the metadata OpenClaw reads before it loads your
+`RedForge.plugin.json` is the metadata RedForge reads before it loads your
 plugin code.
 
 Use it for:
@@ -152,9 +152,9 @@ Those belong in your plugin code and `package.json`.
 | `modelSupport`                      | No       | `object`                         | Manifest-owned shorthand model-family metadata used to auto-load the plugin before runtime.                                                                                                                  |
 | `cliBackends`                       | No       | `string[]`                       | CLI inference backend ids owned by this plugin. Used for startup auto-activation from explicit config refs.                                                                                                  |
 | `commandAliases`                    | No       | `object[]`                       | Command names owned by this plugin that should produce plugin-aware config and CLI diagnostics before runtime loads.                                                                                         |
-| `providerAuthEnvVars`               | No       | `Record<string, string[]>`       | Cheap provider-auth env metadata that OpenClaw can inspect without loading plugin code.                                                                                                                      |
+| `providerAuthEnvVars`               | No       | `Record<string, string[]>`       | Cheap provider-auth env metadata that RedForge can inspect without loading plugin code.                                                                                                                      |
 | `providerAuthAliases`               | No       | `Record<string, string>`         | Provider ids that should reuse another provider id for auth lookup, for example a coding provider that shares the base provider API key and auth profiles.                                                   |
-| `channelEnvVars`                    | No       | `Record<string, string[]>`       | Cheap channel env metadata that OpenClaw can inspect without loading plugin code. Use this for env-driven channel setup or auth surfaces that generic startup/config helpers should see.                     |
+| `channelEnvVars`                    | No       | `Record<string, string[]>`       | Cheap channel env metadata that RedForge can inspect without loading plugin code. Use this for env-driven channel setup or auth surfaces that generic startup/config helpers should see.                     |
 | `providerAuthChoices`               | No       | `object[]`                       | Cheap auth-choice metadata for onboarding pickers, preferred-provider resolution, and simple CLI flag wiring.                                                                                                |
 | `activation`                        | No       | `object`                         | Cheap activation hints for provider, command, channel, route, and capability-triggered loading. Metadata only; plugin runtime still owns actual behavior.                                                    |
 | `setup`                             | No       | `object`                         | Cheap setup/onboarding descriptors that discovery and setup surfaces can inspect without loading plugin runtime.                                                                                             |
@@ -169,14 +169,14 @@ Those belong in your plugin code and `package.json`.
 ## providerAuthChoices reference
 
 Each `providerAuthChoices` entry describes one onboarding or auth choice.
-OpenClaw reads this before provider runtime loads.
+RedForge reads this before provider runtime loads.
 
 | Field                 | Required | Type                                            | What it means                                                                                            |
 | --------------------- | -------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `provider`            | Yes      | `string`                                        | Provider id this choice belongs to.                                                                      |
 | `method`              | Yes      | `string`                                        | Auth method id to dispatch to.                                                                           |
 | `choiceId`            | Yes      | `string`                                        | Stable auth-choice id used by onboarding and CLI flows.                                                  |
-| `choiceLabel`         | No       | `string`                                        | User-facing label. If omitted, OpenClaw falls back to `choiceId`.                                        |
+| `choiceLabel`         | No       | `string`                                        | User-facing label. If omitted, RedForge falls back to `choiceId`.                                        |
 | `choiceHint`          | No       | `string`                                        | Short helper text for the picker.                                                                        |
 | `assistantPriority`   | No       | `number`                                        | Lower values sort earlier in assistant-driven interactive pickers.                                       |
 | `assistantVisibility` | No       | `"visible"` \| `"manual-only"`                  | Hide the choice from assistant pickers while still allowing manual CLI selection.                        |
@@ -193,7 +193,7 @@ OpenClaw reads this before provider runtime loads.
 ## commandAliases reference
 
 Use `commandAliases` when a plugin owns a runtime command name that users may
-mistakenly put in `plugins.allow` or try to run as a root CLI command. OpenClaw
+mistakenly put in `plugins.allow` or try to run as a root CLI command. RedForge
 uses this metadata for diagnostics without importing plugin runtime code.
 
 ```json
@@ -337,7 +337,7 @@ Each field hint can include:
 
 ## contracts reference
 
-Use `contracts` only for static capability ownership metadata that OpenClaw can
+Use `contracts` only for static capability ownership metadata that RedForge can
 read without importing the plugin runtime.
 
 ```json
@@ -412,7 +412,7 @@ Each channel entry can include:
 
 ## modelSupport reference
 
-Use `modelSupport` when OpenClaw should infer your provider plugin from
+Use `modelSupport` when RedForge should infer your provider plugin from
 shorthand model ids like `gpt-5.4` or `claude-sonnet-4.6` before plugin runtime
 loads.
 
@@ -425,7 +425,7 @@ loads.
 }
 ```
 
-OpenClaw applies this precedence:
+RedForge applies this precedence:
 
 - explicit `provider/model` refs use the owning `providers` manifest metadata
 - `modelPatterns` beat `modelPrefixes`
@@ -440,7 +440,7 @@ Fields:
 | `modelPrefixes` | `string[]` | Prefixes matched with `startsWith` against shorthand model ids.                 |
 | `modelPatterns` | `string[]` | Regex sources matched against shorthand model ids after profile suffix removal. |
 
-Legacy top-level capability keys are deprecated. Use `openclaw doctor --fix` to
+Legacy top-level capability keys are deprecated. Use `RedForge doctor --fix` to
 move `speechProviders`, `realtimeTranscriptionProviders`,
 `realtimeVoiceProviders`, `mediaUnderstandingProviders`,
 `imageGenerationProviders`, `videoGenerationProviders`,
@@ -454,51 +454,51 @@ The two files serve different jobs:
 
 | File                   | Use it for                                                                                                                       |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `openclaw.plugin.json` | Discovery, config validation, auth-choice metadata, and UI hints that must exist before plugin code runs                         |
-| `package.json`         | npm metadata, dependency installation, and the `openclaw` block used for entrypoints, install gating, setup, or catalog metadata |
+| `RedForge.plugin.json` | Discovery, config validation, auth-choice metadata, and UI hints that must exist before plugin code runs                         |
+| `package.json`         | npm metadata, dependency installation, and the `RedForge` block used for entrypoints, install gating, setup, or catalog metadata |
 
 If you are unsure where a piece of metadata belongs, use this rule:
 
-- if OpenClaw must know it before loading plugin code, put it in `openclaw.plugin.json`
+- if RedForge must know it before loading plugin code, put it in `RedForge.plugin.json`
 - if it is about packaging, entry files, or npm install behavior, put it in `package.json`
 
 ### package.json fields that affect discovery
 
 Some pre-runtime plugin metadata intentionally lives in `package.json` under the
-`openclaw` block instead of `openclaw.plugin.json`.
+`RedForge` block instead of `RedForge.plugin.json`.
 
 Important examples:
 
 | Field                                                             | What it means                                                                                                                                |
 | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `openclaw.extensions`                                             | Declares native plugin entrypoints.                                                                                                          |
-| `openclaw.setupEntry`                                             | Lightweight setup-only entrypoint used during onboarding and deferred channel startup.                                                       |
-| `openclaw.channel`                                                | Cheap channel catalog metadata like labels, docs paths, aliases, and selection copy.                                                         |
-| `openclaw.channel.configuredState`                                | Lightweight configured-state checker metadata that can answer "does env-only setup already exist?" without loading the full channel runtime. |
-| `openclaw.channel.persistedAuthState`                             | Lightweight persisted-auth checker metadata that can answer "is anything already signed in?" without loading the full channel runtime.       |
-| `openclaw.install.npmSpec` / `openclaw.install.localPath`         | Install/update hints for bundled and externally published plugins.                                                                           |
-| `openclaw.install.defaultChoice`                                  | Preferred install path when multiple install sources are available.                                                                          |
-| `openclaw.install.minHostVersion`                                 | Minimum supported OpenClaw host version, using a semver floor like `>=2026.3.22`.                                                            |
-| `openclaw.install.allowInvalidConfigRecovery`                     | Allows a narrow bundled-plugin reinstall recovery path when config is invalid.                                                               |
-| `openclaw.startup.deferConfiguredChannelFullLoadUntilAfterListen` | Lets setup-only channel surfaces load before the full channel plugin during startup.                                                         |
+| `RedForge.extensions`                                             | Declares native plugin entrypoints.                                                                                                          |
+| `RedForge.setupEntry`                                             | Lightweight setup-only entrypoint used during onboarding and deferred channel startup.                                                       |
+| `RedForge.channel`                                                | Cheap channel catalog metadata like labels, docs paths, aliases, and selection copy.                                                         |
+| `RedForge.channel.configuredState`                                | Lightweight configured-state checker metadata that can answer "does env-only setup already exist?" without loading the full channel runtime. |
+| `RedForge.channel.persistedAuthState`                             | Lightweight persisted-auth checker metadata that can answer "is anything already signed in?" without loading the full channel runtime.       |
+| `RedForge.install.npmSpec` / `RedForge.install.localPath`         | Install/update hints for bundled and externally published plugins.                                                                           |
+| `RedForge.install.defaultChoice`                                  | Preferred install path when multiple install sources are available.                                                                          |
+| `RedForge.install.minHostVersion`                                 | Minimum supported RedForge host version, using a semver floor like `>=2026.3.22`.                                                            |
+| `RedForge.install.allowInvalidConfigRecovery`                     | Allows a narrow bundled-plugin reinstall recovery path when config is invalid.                                                               |
+| `RedForge.startup.deferConfiguredChannelFullLoadUntilAfterListen` | Lets setup-only channel surfaces load before the full channel plugin during startup.                                                         |
 
-`openclaw.install.minHostVersion` is enforced during install and manifest
+`RedForge.install.minHostVersion` is enforced during install and manifest
 registry loading. Invalid values are rejected; newer-but-valid values skip the
 plugin on older hosts.
 
-`openclaw.install.allowInvalidConfigRecovery` is intentionally narrow. It does
+`RedForge.install.allowInvalidConfigRecovery` is intentionally narrow. It does
 not make arbitrary broken configs installable. Today it only allows install
 flows to recover from specific stale bundled-plugin upgrade failures, such as a
 missing bundled plugin path or a stale `channels.<id>` entry for that same
 bundled plugin. Unrelated config errors still block install and send operators
-to `openclaw doctor --fix`.
+to `RedForge doctor --fix`.
 
-`openclaw.channel.persistedAuthState` is package metadata for a tiny checker
+`RedForge.channel.persistedAuthState` is package metadata for a tiny checker
 module:
 
 ```json
 {
-  "openclaw": {
+  "RedForge": {
     "channel": {
       "id": "whatsapp",
       "persistedAuthState": {
@@ -515,12 +515,12 @@ probe before the full channel plugin loads. The target export should be a small
 function that reads persisted state only; do not route it through the full
 channel runtime barrel.
 
-`openclaw.channel.configuredState` follows the same shape for cheap env-only
+`RedForge.channel.configuredState` follows the same shape for cheap env-only
 configured checks:
 
 ```json
 {
-  "openclaw": {
+  "RedForge": {
     "channel": {
       "id": "telegram",
       "configuredState": {
@@ -558,7 +558,7 @@ See [Configuration reference](/gateway/configuration) for the full `plugins.*` s
 
 ## Notes
 
-- The manifest is **required for native OpenClaw plugins**, including local filesystem loads.
+- The manifest is **required for native RedForge plugins**, including local filesystem loads.
 - Runtime still loads the plugin module separately; the manifest is only for
   discovery + validation.
 - Native manifests are parsed with JSON5, so comments, trailing commas, and

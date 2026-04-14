@@ -1,7 +1,7 @@
 ---
-summary: "Run OpenClaw with SGLang (OpenAI-compatible self-hosted server)"
+summary: "Run RedForge with SGLang (OpenAI-compatible self-hosted server)"
 read_when:
-  - You want to run OpenClaw against a local SGLang server
+  - You want to run RedForge against a local SGLang server
   - You want OpenAI-compatible /v1 endpoints with your own models
 title: "SGLang"
 ---
@@ -9,9 +9,9 @@ title: "SGLang"
 # SGLang
 
 SGLang can serve open-source models via an **OpenAI-compatible** HTTP API.
-OpenClaw can connect to SGLang using the `openai-completions` API.
+RedForge can connect to SGLang using the `openai-completions` API.
 
-OpenClaw can also **auto-discover** available models from SGLang when you opt
+RedForge can also **auto-discover** available models from SGLang when you opt
 in with `SGLANG_API_KEY` (any value works if your server does not enforce auth)
 and you do not define an explicit `models.providers.sglang` entry.
 
@@ -36,7 +36,7 @@ and you do not define an explicit `models.providers.sglang` entry.
   </Step>
   <Step title="Run onboarding or set a model directly">
     ```bash
-    openclaw onboard
+    RedForge onboard
     ```
 
     Or configure the model manually:
@@ -57,7 +57,7 @@ and you do not define an explicit `models.providers.sglang` entry.
 ## Model discovery (implicit provider)
 
 When `SGLANG_API_KEY` is set (or an auth profile exists) and you **do not**
-define `models.providers.sglang`, OpenClaw will query:
+define `models.providers.sglang`, RedForge will query:
 
 - `GET http://127.0.0.1:30000/v1/models`
 

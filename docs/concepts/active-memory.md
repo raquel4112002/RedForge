@@ -57,7 +57,7 @@ available.
 After that, restart the gateway:
 
 ```bash
-openclaw gateway
+RedForge gateway
 ```
 
 To inspect it live in a conversation:
@@ -74,7 +74,7 @@ The safest setup is:
 2. target one conversational agent
 3. keep logging on only while tuning
 
-Start with this in `openclaw.json`:
+Start with this in `RedForge.json`:
 
 ```json5
 {
@@ -102,7 +102,7 @@ Start with this in `openclaw.json`:
 Then restart the gateway:
 
 ```bash
-openclaw gateway
+RedForge gateway
 ```
 
 What this means:
@@ -155,7 +155,7 @@ mode on for that session:
 /verbose on
 ```
 
-With verbose enabled, OpenClaw can show:
+With verbose enabled, RedForge can show:
 
 - an active memory status line such as `Active Memory: ok 842ms recent 34 chars`
 - a readable debug summary such as `Active Memory Debug: Lemon pepper wings with blue cheese.`
@@ -378,7 +378,7 @@ Memory prompt and before the conversation context:
 promptAppend: "Prefer stable long-term preferences over one-off events."
 ```
 
-`config.promptOverride` replaces the default Active Memory prompt. OpenClaw
+`config.promptOverride` replaces the default Active Memory prompt. RedForge
 still appends the conversation context afterward:
 
 ```json5
@@ -584,7 +584,7 @@ If active memory is not showing up where you expect:
 2. Confirm the current agent id is listed in `config.agents`.
 3. Confirm you are testing through an interactive persistent chat session.
 4. Turn on `config.logging: true` and watch the gateway logs.
-5. Verify memory search itself works with `openclaw memory status --deep`.
+5. Verify memory search itself works with `RedForge memory status --deep`.
 
 If memory hits are noisy, tighten:
 

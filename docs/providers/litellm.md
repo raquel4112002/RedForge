@@ -1,21 +1,21 @@
 ---
 title: "LiteLLM"
-summary: "Run OpenClaw through LiteLLM Proxy for unified model access and cost tracking"
+summary: "Run RedForge through LiteLLM Proxy for unified model access and cost tracking"
 read_when:
-  - You want to route OpenClaw through a LiteLLM proxy
+  - You want to route RedForge through a LiteLLM proxy
   - You need cost tracking, logging, or model routing through LiteLLM
 ---
 
 # LiteLLM
 
-[LiteLLM](https://litellm.ai) is an open-source LLM gateway that provides a unified API to 100+ model providers. Route OpenClaw through LiteLLM to get centralized cost tracking, logging, and the flexibility to switch backends without changing your OpenClaw config.
+[LiteLLM](https://litellm.ai) is an open-source LLM gateway that provides a unified API to 100+ model providers. Route RedForge through LiteLLM to get centralized cost tracking, logging, and the flexibility to switch backends without changing your RedForge config.
 
 <Tip>
-**Why use LiteLLM with OpenClaw?**
+**Why use LiteLLM with RedForge?**
 
-- **Cost tracking** — See exactly what OpenClaw spends across all models
+- **Cost tracking** — See exactly what RedForge spends across all models
 - **Model routing** — Switch between Claude, GPT-4, Gemini, Bedrock without config changes
-- **Virtual keys** — Create keys with spend limits for OpenClaw
+- **Virtual keys** — Create keys with spend limits for RedForge
 - **Logging** — Full request/response logs for debugging
 - **Fallbacks** — Automatic failover if your primary provider is down
   </Tip>
@@ -29,7 +29,7 @@ read_when:
     <Steps>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice litellm-api-key
+        RedForge onboard --auth-choice litellm-api-key
         ```
       </Step>
     </Steps>
@@ -46,14 +46,14 @@ read_when:
         litellm --model claude-opus-4-6
         ```
       </Step>
-      <Step title="Point OpenClaw to LiteLLM">
+      <Step title="Point RedForge to LiteLLM">
         ```bash
         export LITELLM_API_KEY="your-litellm-key"
 
-        openclaw
+        RedForge
         ```
 
-        That's it. OpenClaw now routes through LiteLLM.
+        That's it. RedForge now routes through LiteLLM.
       </Step>
     </Steps>
 
@@ -111,14 +111,14 @@ export LITELLM_API_KEY="sk-litellm-key"
 
 <AccordionGroup>
   <Accordion title="Virtual keys">
-    Create a dedicated key for OpenClaw with spend limits:
+    Create a dedicated key for RedForge with spend limits:
 
     ```bash
     curl -X POST "http://localhost:4000/key/generate" \
       -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
       -H "Content-Type: application/json" \
       -d '{
-        "key_alias": "openclaw",
+        "key_alias": "RedForge",
         "max_budget": 50.00,
         "budget_duration": "monthly"
       }'
@@ -144,7 +144,7 @@ export LITELLM_API_KEY="sk-litellm-key"
           api_key: os.environ/OPENAI_API_KEY
     ```
 
-    OpenClaw keeps requesting `claude-opus-4-6` — LiteLLM handles the routing.
+    RedForge keeps requesting `claude-opus-4-6` — LiteLLM handles the routing.
 
   </Accordion>
 
@@ -165,12 +165,12 @@ export LITELLM_API_KEY="sk-litellm-key"
 
   <Accordion title="Proxy behavior notes">
     - LiteLLM runs on `http://localhost:4000` by default
-    - OpenClaw connects through LiteLLM's proxy-style OpenAI-compatible `/v1`
+    - RedForge connects through LiteLLM's proxy-style OpenAI-compatible `/v1`
       endpoint
     - Native OpenAI-only request shaping does not apply through LiteLLM:
       no `service_tier`, no Responses `store`, no prompt-cache hints, and no
       OpenAI reasoning-compat payload shaping
-    - Hidden OpenClaw attribution headers (`originator`, `version`, `User-Agent`)
+    - Hidden RedForge attribution headers (`originator`, `version`, `User-Agent`)
       are not injected on custom LiteLLM base URLs
   </Accordion>
 </AccordionGroup>

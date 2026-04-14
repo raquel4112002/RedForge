@@ -1,14 +1,14 @@
 ---
-summary: "Use xAI Grok models in OpenClaw"
+summary: "Use xAI Grok models in RedForge"
 read_when:
-  - You want to use Grok models in OpenClaw
+  - You want to use Grok models in RedForge
   - You are configuring xAI auth or model ids
 title: "xAI"
 ---
 
 # xAI
 
-OpenClaw ships a bundled `xai` provider plugin for Grok models.
+RedForge ships a bundled `xai` provider plugin for Grok models.
 
 ## Getting started
 
@@ -20,7 +20,7 @@ OpenClaw ships a bundled `xai` provider plugin for Grok models.
     Set `XAI_API_KEY`, or run:
 
     ```bash
-    openclaw onboard --auth-choice xai-api-key
+    RedForge onboard --auth-choice xai-api-key
     ```
 
   </Step>
@@ -34,7 +34,7 @@ OpenClaw ships a bundled `xai` provider plugin for Grok models.
 </Steps>
 
 <Note>
-OpenClaw uses the xAI Responses API as the bundled xAI transport. The same
+RedForge uses the xAI Responses API as the bundled xAI transport. The same
 `XAI_API_KEY` can also power Grok-backed `web_search`, first-class `x_search`,
 and remote `code_execution`.
 If you store an xAI key under `plugins.entries.xai.config.webSearch.apiKey`,
@@ -44,7 +44,7 @@ the bundled xAI model provider reuses that key as a fallback too.
 
 ## Bundled model catalog
 
-OpenClaw includes these xAI model families out of the box:
+RedForge includes these xAI model families out of the box:
 
 | Family         | Model ids                                                                |
 | -------------- | ------------------------------------------------------------------------ |
@@ -93,7 +93,7 @@ Legacy aliases still normalize to the canonical bundled ids:
     The bundled `grok` web-search provider uses `XAI_API_KEY` too:
 
     ```bash
-    openclaw config set tools.web.search.provider grok
+    RedForge config set tools.web.search.provider grok
     ```
 
   </Accordion>
@@ -133,7 +133,7 @@ Legacy aliases still normalize to the canonical bundled ids:
   </Accordion>
 
   <Accordion title="x_search configuration">
-    The bundled xAI plugin exposes `x_search` as an OpenClaw tool for searching
+    The bundled xAI plugin exposes `x_search` as an RedForge tool for searching
     X (formerly Twitter) content via Grok.
 
     Config path: `plugins.entries.xai.config.xSearch`
@@ -168,7 +168,7 @@ Legacy aliases still normalize to the canonical bundled ids:
   </Accordion>
 
   <Accordion title="Code execution configuration">
-    The bundled xAI plugin exposes `code_execution` as an OpenClaw tool for
+    The bundled xAI plugin exposes `code_execution` as an RedForge tool for
     remote code execution in xAI's sandbox environment.
 
     Config path: `plugins.entries.xai.config.codeExecution`
@@ -205,22 +205,22 @@ Legacy aliases still normalize to the canonical bundled ids:
 
   <Accordion title="Known limits">
     - Auth is API-key only today. There is no xAI OAuth or device-code flow in
-      OpenClaw yet.
+      RedForge yet.
     - `grok-4.20-multi-agent-experimental-beta-0304` is not supported on the
       normal xAI provider path because it requires a different upstream API
-      surface than the standard OpenClaw xAI transport.
+      surface than the standard RedForge xAI transport.
   </Accordion>
 
   <Accordion title="Advanced notes">
-    - OpenClaw applies xAI-specific tool-schema and tool-call compatibility fixes
+    - RedForge applies xAI-specific tool-schema and tool-call compatibility fixes
       automatically on the shared runner path.
     - Native xAI requests default `tool_stream: true`. Set
       `agents.defaults.models["xai/<model>"].params.tool_stream` to `false` to
       disable it.
     - The bundled xAI wrapper strips unsupported strict tool-schema flags and
       reasoning payload keys before sending native xAI requests.
-    - `web_search`, `x_search`, and `code_execution` are exposed as OpenClaw
-      tools. OpenClaw enables the specific xAI built-in it needs inside each tool
+    - `web_search`, `x_search`, and `code_execution` are exposed as RedForge
+      tools. RedForge enables the specific xAI built-in it needs inside each tool
       request instead of attaching all native tools to every chat turn.
     - `x_search` and `code_execution` are owned by the bundled xAI plugin rather
       than hardcoded into the core model runtime.

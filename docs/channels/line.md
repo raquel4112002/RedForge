@@ -1,7 +1,7 @@
 ---
 summary: "LINE Messaging API plugin setup, config, and usage"
 read_when:
-  - You want to connect OpenClaw to LINE
+  - You want to connect RedForge to LINE
   - You need LINE webhook + credential setup
   - You want LINE-specific message options
 title: LINE
@@ -9,7 +9,7 @@ title: LINE
 
 # LINE
 
-LINE connects to OpenClaw via the LINE Messaging API. The plugin runs as a webhook
+LINE connects to RedForge via the LINE Messaging API. The plugin runs as a webhook
 receiver on the gateway and uses your channel access token + channel secret for
 authentication.
 
@@ -19,20 +19,20 @@ are not supported.
 
 ## Bundled plugin
 
-LINE ships as a bundled plugin in current OpenClaw releases, so normal
+LINE ships as a bundled plugin in current RedForge releases, so normal
 packaged builds do not need a separate install.
 
 If you are on an older build or a custom install that excludes LINE, install it
 manually:
 
 ```bash
-openclaw plugins install @openclaw/line
+RedForge plugins install @RedForge/line
 ```
 
 Local checkout (when running from a git repo):
 
 ```bash
-openclaw plugins install ./path/to/local/line-plugin
+RedForge plugins install ./path/to/local/line-plugin
 ```
 
 ## Setup
@@ -54,8 +54,8 @@ If you need a custom path, set `channels.line.webhookPath` or
 
 Security note:
 
-- LINE signature verification is body-dependent (HMAC over the raw body), so OpenClaw applies strict pre-auth body limits and timeout before verification.
-- OpenClaw processes webhook events from the verified raw request bytes. Upstream middleware-transformed `req.body` values are ignored for signature-integrity safety.
+- LINE signature verification is body-dependent (HMAC over the raw body), so RedForge applies strict pre-auth body limits and timeout before verification.
+- RedForge processes webhook events from the verified raw request bytes. Upstream middleware-transformed `req.body` values are ignored for signature-integrity safety.
 
 ## Configure
 
@@ -118,8 +118,8 @@ Direct messages default to pairing. Unknown senders get a pairing code and their
 messages are ignored until approved.
 
 ```bash
-openclaw pairing list line
-openclaw pairing approve line <CODE>
+RedForge pairing list line
+RedForge pairing approve line <CODE>
 ```
 
 Allowlists and policies:

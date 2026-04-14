@@ -9,7 +9,7 @@ title: "QA E2E Automation"
 
 # QA E2E Automation
 
-The private QA stack is meant to exercise OpenClaw in a more realistic,
+The private QA stack is meant to exercise RedForge in a more realistic,
 channel-shaped way than a single unit test can.
 
 Current pieces:
@@ -41,7 +41,7 @@ For faster QA Lab UI iteration without rebuilding the Docker image each time,
 start the stack with a bind-mounted QA Lab bundle:
 
 ```bash
-pnpm openclaw qa docker-build-image
+pnpm RedForge qa docker-build-image
 pnpm qa:lab:build
 pnpm qa:lab:up:fast
 pnpm qa:lab:watch
@@ -55,7 +55,7 @@ asset hash changes.
 For a transport-real Matrix smoke lane, run:
 
 ```bash
-pnpm openclaw qa matrix
+pnpm RedForge qa matrix
 ```
 
 That lane provisions a disposable Tuwunel homeserver in Docker, registers
@@ -67,13 +67,13 @@ the child config scoped to the transport under test, so Matrix runs without
 For a transport-real Telegram smoke lane, run:
 
 ```bash
-pnpm openclaw qa telegram
+pnpm RedForge qa telegram
 ```
 
 That lane targets one real private Telegram group instead of provisioning a
-disposable server. It requires `OPENCLAW_QA_TELEGRAM_GROUP_ID`,
-`OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN`, and
-`OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`, plus two distinct bots in the same
+disposable server. It requires `RedForge_QA_TELEGRAM_GROUP_ID`,
+`RedForge_QA_TELEGRAM_DRIVER_BOT_TOKEN`, and
+`RedForge_QA_TELEGRAM_SUT_BOT_TOKEN`, plus two distinct bots in the same
 private group. The SUT bot must have a Telegram username, and bot-to-bot
 observation works best when both bots have Bot-to-Bot Communication Mode
 enabled in `@BotFather`.
@@ -96,10 +96,10 @@ checklist.
 For a disposable Linux VM lane without bringing Docker into the QA path, run:
 
 ```bash
-pnpm openclaw qa suite --runner multipass --scenario channel-chat-baseline
+pnpm RedForge qa suite --runner multipass --scenario channel-chat-baseline
 ```
 
-This boots a fresh Multipass guest, installs dependencies, builds OpenClaw
+This boots a fresh Multipass guest, installs dependencies, builds RedForge
 inside the guest, runs `qa suite`, then copies the normal QA report and
 summary back into `.artifacts/qa-e2e/...` on the host.
 It reuses the same scenario-selection behavior as `qa suite` on the host.
@@ -146,7 +146,7 @@ For character and style checks, run the same scenario across multiple live model
 refs and write a judged Markdown report:
 
 ```bash
-pnpm openclaw qa character-eval \
+pnpm RedForge qa character-eval \
   --model openai/gpt-5.4,thinking=xhigh \
   --model openai/gpt-5.2,thinking=xhigh \
   --model openai/gpt-5,thinking=xhigh \

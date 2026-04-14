@@ -1,14 +1,14 @@
 ---
-summary: "Community-maintained OpenClaw plugins: browse, install, and submit your own"
+summary: "Community-maintained RedForge plugins: browse, install, and submit your own"
 read_when:
-  - You want to find third-party OpenClaw plugins
+  - You want to find third-party RedForge plugins
   - You want to publish or list your own plugin
 title: "Community Plugins"
 ---
 
 # Community Plugins
 
-Community plugins are third-party packages that extend OpenClaw with new
+Community plugins are third-party packages that extend RedForge with new
 channels, tools, providers, or other capabilities. They are built and maintained
 by the community, published on [ClawHub](/tools/clawhub) or npm, and
 installable with a single command.
@@ -18,24 +18,24 @@ docs-only PRs just to add your plugin here for discoverability; publish it on
 ClawHub instead.
 
 ```bash
-openclaw plugins install <package-name>
+RedForge plugins install <package-name>
 ```
 
-OpenClaw checks ClawHub first and falls back to npm automatically.
+RedForge checks ClawHub first and falls back to npm automatically.
 
 ## Listed plugins
 
 ### Codex App Server Bridge
 
-Independent OpenClaw bridge for Codex App Server conversations. Bind a chat to
+Independent RedForge bridge for Codex App Server conversations. Bind a chat to
 a Codex thread, talk to it with plain text, and control it with chat-native
 commands for resume, planning, review, model selection, compaction, and more.
 
-- **npm:** `openclaw-codex-app-server`
-- **repo:** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
+- **npm:** `RedForge-codex-app-server`
+- **repo:** [github.com/pwrdrvr/RedForge-codex-app-server](https://github.com/pwrdrvr/RedForge-codex-app-server)
 
 ```bash
-openclaw plugins install openclaw-codex-app-server
+RedForge plugins install RedForge-codex-app-server
 ```
 
 ### DingTalk
@@ -44,15 +44,15 @@ Enterprise robot integration using Stream mode. Supports text, images, and
 file messages via any DingTalk client.
 
 - **npm:** `@largezhou/ddingtalk`
-- **repo:** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
+- **repo:** [github.com/largezhou/RedForge-dingtalk](https://github.com/largezhou/RedForge-dingtalk)
 
 ```bash
-openclaw plugins install @largezhou/ddingtalk
+RedForge plugins install @largezhou/ddingtalk
 ```
 
 ### Lossless Claw (LCM)
 
-Lossless Context Management plugin for OpenClaw. DAG-based conversation
+Lossless Context Management plugin for RedForge. DAG-based conversation
 summarization with incremental compaction — preserves full context fidelity
 while reducing token usage.
 
@@ -60,7 +60,7 @@ while reducing token usage.
 - **repo:** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
 
 ```bash
-openclaw plugins install @martian-engineering/lossless-claw
+RedForge plugins install @martian-engineering/lossless-claw
 ```
 
 ### Opik
@@ -68,38 +68,38 @@ openclaw plugins install @martian-engineering/lossless-claw
 Official plugin that exports agent traces to Opik. Monitor agent behavior,
 cost, tokens, errors, and more.
 
-- **npm:** `@opik/opik-openclaw`
-- **repo:** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
+- **npm:** `@opik/opik-RedForge`
+- **repo:** [github.com/comet-ml/opik-RedForge](https://github.com/comet-ml/opik-RedForge)
 
 ```bash
-openclaw plugins install @opik/opik-openclaw
+RedForge plugins install @opik/opik-RedForge
 ```
 
 ### QQbot
 
-Connect OpenClaw to QQ via the QQ Bot API. Supports private chats, group
+Connect RedForge to QQ via the QQ Bot API. Supports private chats, group
 mentions, channel messages, and rich media including voice, images, videos,
 and files.
 
-- **npm:** `@tencent-connect/openclaw-qqbot`
-- **repo:** [github.com/tencent-connect/openclaw-qqbot](https://github.com/tencent-connect/openclaw-qqbot)
+- **npm:** `@tencent-connect/RedForge-qqbot`
+- **repo:** [github.com/tencent-connect/RedForge-qqbot](https://github.com/tencent-connect/RedForge-qqbot)
 
 ```bash
-openclaw plugins install @tencent-connect/openclaw-qqbot
+RedForge plugins install @tencent-connect/RedForge-qqbot
 ```
 
 ### wecom
 
-WeCom channel plugin for OpenClaw by the Tencent WeCom team. Powered by
+WeCom channel plugin for RedForge by the Tencent WeCom team. Powered by
 WeCom Bot WebSocket persistent connections, it supports direct messages & group
 chats, streaming replies, proactive messaging, image/file processing, Markdown
 formatting, built-in access control, and document/meeting/messaging skills.
 
-- **npm:** `@wecom/wecom-openclaw-plugin`
-- **repo:** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
+- **npm:** `@wecom/wecom-RedForge-plugin`
+- **repo:** [github.com/WecomTeam/wecom-RedForge-plugin](https://github.com/WecomTeam/wecom-RedForge-plugin)
 
 ```bash
-openclaw plugins install @wecom/wecom-openclaw-plugin
+RedForge plugins install @wecom/wecom-RedForge-plugin
 ```
 
 ## Submit your plugin
@@ -108,7 +108,7 @@ We welcome community plugins that are useful, documented, and safe to operate.
 
 <Steps>
   <Step title="Publish to ClawHub or npm">
-    Your plugin must be installable via `openclaw plugins install \<package-name\>`.
+    Your plugin must be installable via `RedForge plugins install \<package-name\>`.
     Publish to [ClawHub](/tools/clawhub) (preferred) or npm.
     See [Building Plugins](/plugins/building-plugins) for the full guide.
 
@@ -124,7 +124,7 @@ We welcome community plugins that are useful, documented, and safe to operate.
     You do not need a docs PR just to make your plugin discoverable. Publish it
     on ClawHub instead.
 
-    Open a docs PR only when OpenClaw's source docs need an actual content
+    Open a docs PR only when RedForge's source docs need an actual content
     change, such as correcting install guidance or adding cross-repo
     documentation that belongs in the main docs set.
 
@@ -135,7 +135,7 @@ We welcome community plugins that are useful, documented, and safe to operate.
 
 | Requirement                 | Why                                           |
 | --------------------------- | --------------------------------------------- |
-| Published on ClawHub or npm | Users need `openclaw plugins install` to work |
+| Published on ClawHub or npm | Users need `RedForge plugins install` to work |
 | Public GitHub repo          | Source review, issue tracking, transparency   |
 | Setup and usage docs        | Users need to know how to configure it        |
 | Active maintenance          | Recent updates or responsive issue handling   |

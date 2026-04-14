@@ -15,15 +15,15 @@ commands are allowed only when policy + allowlist + (optional) user approval all
 Exec approvals are **in addition** to tool policy and elevated gating (unless elevated is set to `full`, which skips approvals).
 Effective policy is the **stricter** of `tools.exec.*` and approvals defaults; if an approvals field is omitted, the `tools.exec` value is used.
 Host exec also uses the local approvals state on that machine. A host-local
-`ask: "always"` in `~/.openclaw/exec-approvals.json` keeps prompting even if
+`ask: "always"` in `~/.RedForge/exec-approvals.json` keeps prompting even if
 session or config defaults request `ask: "on-miss"`.
-Use `openclaw approvals get`, `openclaw approvals get --gateway`, or
-`openclaw approvals get --node <id|name|ip>` to inspect the requested policy,
+Use `RedForge approvals get`, `RedForge approvals get --gateway`, or
+`RedForge approvals get --node <id|name|ip>` to inspect the requested policy,
 host policy sources, and the effective result.
-For the local machine, `openclaw exec-policy show` exposes the same merged view and
-`openclaw exec-policy set|preset` can synchronize the local requested policy with the
+For the local machine, `RedForge exec-policy show` exposes the same merged view and
+`RedForge exec-policy set|preset` can synchronize the local requested policy with the
 local host approvals file in one step. When a local scope requests `host=node`,
-`openclaw exec-policy show` reports that scope as node-managed at runtime instead of
+`RedForge exec-policy show` reports that scope as node-managed at runtime instead of
 pretending the local approvals file is the effective source of truth.
 
 If the companion app UI is **not available**, any request that requires a prompt is
@@ -38,7 +38,7 @@ while still leaving the `/approve ...` commands in the message as a fallback.
 
 Exec approvals are enforced locally on the execution host:
 
-- **gateway host** → `openclaw` process on the gateway machine
+- **gateway host** → `RedForge` process on the gateway machine
 - **node host** → node runner (macOS companion app or headless node host)
 
 Trust model note:
@@ -48,7 +48,7 @@ Trust model note:
 - Exec approvals reduce accidental execution risk, but are not a per-user auth boundary.
 - Approved node-host runs bind canonical execution context: canonical cwd, exact argv, env
   binding when present, and pinned executable path when applicable.
-- For shell scripts and direct interpreter/runtime file invocations, OpenClaw also tries to bind
+- For shell scripts and direct interpreter/runtime file invocations, RedForge also tries to bind
   one concrete local file operand. If that bound file changes after approval but before execution,
   the run is denied instead of executing drifted content.
 - This file binding is intentionally best-effort, not a complete semantic model of every
@@ -64,7 +64,7 @@ macOS split:
 
 Approvals live in a local JSON file on the execution host:
 
-`~/.openclaw/exec-approvals.json`
+`~/.RedForge/exec-approvals.json`
 
 Example schema:
 
@@ -72,7 +72,7 @@ Example schema:
 {
   "version": 1,
   "socket": {
-    "path": "~/.openclaw/exec-approvals.sock",
+    "path": "~/.RedForge/exec-approvals.sock",
     "token": "base64url-token"
   },
   "defaults": {
@@ -105,8 +105,8 @@ Example schema:
 
 If you want host exec to run without approval prompts, you must open **both** policy layers:
 
-- requested exec policy in OpenClaw config (`tools.exec.*`)
-- host-local approvals policy in `~/.openclaw/exec-approvals.json`
+- requested exec policy in RedForge config (`tools.exec.*`)
+- host-local approvals policy in `~/.RedForge/exec-approvals.json`
 
 This is now the default host behavior unless you tighten it explicitly:
 
@@ -118,7 +118,7 @@ Important distinction:
 
 - `tools.exec.host=auto` chooses where exec runs: sandbox when available, otherwise gateway.
 - YOLO chooses how host exec is approved: `security=full` plus `ask=off`.
-- In YOLO mode, OpenClaw does not add a separate heuristic command-obfuscation approval gate on top of the configured host exec policy.
+- In YOLO mode, RedForge does not add a separate heuristic command-obfuscation approval gate on top of the configured host exec policy.
 - `auto` does not make gateway routing a free override from a sandboxed session. A per-call `host=node` request is allowed from `auto`, and `host=gateway` is only allowed from `auto` when no sandbox runtime is active. If you want a stable non-auto default, set `tools.exec.host` or use `/exec host=...` explicitly.
 
 If you want a more conservative setup, tighten either layer back to `allowlist` / `on-miss`
@@ -127,16 +127,16 @@ or `deny`.
 Persistent gateway-host "never prompt" setup:
 
 ```bash
-openclaw config set tools.exec.host gateway
-openclaw config set tools.exec.security full
-openclaw config set tools.exec.ask off
-openclaw gateway restart
+RedForge config set tools.exec.host gateway
+RedForge config set tools.exec.security full
+RedForge config set tools.exec.ask off
+RedForge gateway restart
 ```
 
 Then set the host approvals file to match:
 
 ```bash
-openclaw approvals set --stdin <<'EOF'
+RedForge approvals set --stdin <<'EOF'
 {
   version: 1,
   defaults: {
@@ -151,22 +151,22 @@ EOF
 Local shortcut for the same gateway-host policy on the current machine:
 
 ```bash
-openclaw exec-policy preset yolo
+RedForge exec-policy preset yolo
 ```
 
 That local shortcut updates both:
 
 - local `tools.exec.host/security/ask`
-- local `~/.openclaw/exec-approvals.json` defaults
+- local `~/.RedForge/exec-approvals.json` defaults
 
 It is intentionally local-only. If you need to change gateway-host or node-host approvals
-remotely, continue using `openclaw approvals set --gateway` or
-`openclaw approvals set --node <id|name|ip>`.
+remotely, continue using `RedForge approvals set --gateway` or
+`RedForge approvals set --node <id|name|ip>`.
 
 For a node host, apply the same approvals file on that node instead:
 
 ```bash
-openclaw approvals set --node <id|name|ip> --stdin <<'EOF'
+RedForge approvals set --node <id|name|ip> --stdin <<'EOF'
 {
   version: 1,
   defaults: {
@@ -180,9 +180,9 @@ EOF
 
 Important local-only limitation:
 
-- `openclaw exec-policy` does not synchronize node approvals
-- `openclaw exec-policy set --host node` is rejected
-- node exec approvals are fetched from the node at runtime, so node-targeted updates must use `openclaw approvals --node ...`
+- `RedForge exec-policy` does not synchronize node approvals
+- `RedForge exec-policy set --host node` is rejected
+- node exec approvals are fetched from the node at runtime, so node-targeted updates must use `RedForge approvals --node ...`
 
 Session-only shortcut:
 
@@ -216,7 +216,7 @@ If a prompt is required but no UI is reachable, fallback decides:
 
 ### Inline interpreter eval hardening (`tools.exec.strictInlineEval`)
 
-When `tools.exec.strictInlineEval=true`, OpenClaw treats inline code-eval forms as approval-only even if the interpreter binary itself is allowlisted.
+When `tools.exec.strictInlineEval=true`, RedForge treats inline code-eval forms as approval-only even if the interpreter binary itself is allowlisted.
 
 Examples:
 
@@ -351,9 +351,9 @@ Configuration location:
 - `safeBins` comes from config (`tools.exec.safeBins` or per-agent `agents.list[].tools.exec.safeBins`).
 - `safeBinTrustedDirs` comes from config (`tools.exec.safeBinTrustedDirs` or per-agent `agents.list[].tools.exec.safeBinTrustedDirs`).
 - `safeBinProfiles` comes from config (`tools.exec.safeBinProfiles` or per-agent `agents.list[].tools.exec.safeBinProfiles`). Per-agent profile keys override global keys.
-- allowlist entries live in host-local `~/.openclaw/exec-approvals.json` under `agents.<id>.allowlist` (or via Control UI / `openclaw approvals allowlist ...`).
-- `openclaw security audit` warns with `tools.exec.safe_bins_interpreter_unprofiled` when interpreter/runtime bins appear in `safeBins` without explicit profiles.
-- `openclaw doctor --fix` can scaffold missing custom `safeBinProfiles.<bin>` entries as `{}` (review and tighten afterward). Interpreter/runtime bins are not auto-scaffolded.
+- allowlist entries live in host-local `~/.RedForge/exec-approvals.json` under `agents.<id>.allowlist` (or via Control UI / `RedForge approvals allowlist ...`).
+- `RedForge security audit` warns with `tools.exec.safe_bins_interpreter_unprofiled` when interpreter/runtime bins appear in `safeBins` without explicit profiles.
+- `RedForge doctor --fix` can scaffold missing custom `safeBinProfiles.<bin>` entries as `{}` (review and tighten afterward). Interpreter/runtime bins are not auto-scaffolded.
 
 Custom profile example:
 
@@ -375,7 +375,7 @@ Custom profile example:
 }
 ```
 
-If you explicitly opt `jq` into `safeBins`, OpenClaw still rejects the `env` builtin in safe-bin
+If you explicitly opt `jq` into `safeBins`, RedForge still rejects the `env` builtin in safe-bin
 mode so `jq -n env` cannot dump the host process environment without an explicit allowlist path
 or approval prompt.
 
@@ -389,9 +389,9 @@ per pattern so you can keep the list tidy.
 The target selector chooses **Gateway** (local approvals) or a **Node**. Nodes
 must advertise `system.execApprovals.get/set` (macOS app or headless node host).
 If a node does not advertise exec approvals yet, edit its local
-`~/.openclaw/exec-approvals.json` directly.
+`~/.RedForge/exec-approvals.json` directly.
 
-CLI: `openclaw approvals` supports gateway or node editing (see [Approvals CLI](/cli/approvals)).
+CLI: `RedForge approvals` supports gateway or node editing (see [Approvals CLI](/cli/approvals)).
 
 ## Approval flow
 
@@ -422,7 +422,7 @@ Approval-backed interpreter/runtime runs are intentionally conservative:
   file snapshot.
 - Common package-manager wrapper forms that still resolve to one direct local file (for example
   `pnpm exec`, `pnpm node`, `npm exec`, `npx`) are unwrapped before binding.
-- If OpenClaw cannot identify exactly one concrete local file for an interpreter/runtime command
+- If RedForge cannot identify exactly one concrete local file for an interpreter/runtime command
   (for example package scripts, eval forms, runtime-specific loader chains, or ambiguous multi-file
   forms), approval-backed execution is denied instead of claiming semantic coverage it does not
   have.
@@ -435,7 +435,7 @@ timeout, the request is treated as an approval timeout and surfaced as a denial 
 
 ### Followup delivery behavior
 
-After an approved async exec finishes, OpenClaw sends a followup `agent` turn to the same session.
+After an approved async exec finishes, RedForge sends a followup `agent` turn to the same session.
 
 - If a valid external delivery target exists (deliverable channel plus target `to`), followup delivery uses that channel.
 - In webchat-only or internal-session flows with no external target, followup delivery stays session-only (`deliver: false`).
@@ -596,7 +596,7 @@ Shared behavior:
 
 Telegram defaults to approver DMs (`target: "dm"`). You can switch to `channel` or `both` when you
 want approval prompts to appear in the originating Telegram chat/topic as well. For Telegram forum
-topics, OpenClaw preserves the topic for the approval prompt and the post-approval follow-up.
+topics, RedForge preserves the topic for the approval prompt and the post-approval follow-up.
 
 See:
 
@@ -632,7 +632,7 @@ Approval-gated execs reuse the approval id as the `runId` in these messages for 
 
 ## Denied approval behavior
 
-When an async exec approval is denied, OpenClaw prevents the agent from reusing
+When an async exec approval is denied, RedForge prevents the agent from reusing
 output from any earlier run of the same command in the session. The denial reason
 is passed with explicit guidance that no command output is available, which stops
 the agent from claiming there is new output or repeating the denied command with

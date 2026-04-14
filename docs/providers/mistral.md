@@ -1,14 +1,14 @@
 ---
-summary: "Use Mistral models and Voxtral transcription with OpenClaw"
+summary: "Use Mistral models and Voxtral transcription with RedForge"
 read_when:
-  - You want to use Mistral models in OpenClaw
+  - You want to use Mistral models in RedForge
   - You need Mistral API key onboarding and model refs
 title: "Mistral"
 ---
 
 # Mistral
 
-OpenClaw supports Mistral for both text/image model routing (`mistral/...`) and
+RedForge supports Mistral for both text/image model routing (`mistral/...`) and
 audio transcription via Voxtral in media understanding.
 Mistral can also be used for memory embeddings (`memorySearch.provider = "mistral"`).
 
@@ -24,13 +24,13 @@ Mistral can also be used for memory embeddings (`memorySearch.provider = "mistra
   </Step>
   <Step title="Run onboarding">
     ```bash
-    openclaw onboard --auth-choice mistral-api-key
+    RedForge onboard --auth-choice mistral-api-key
     ```
 
     Or pass the key directly:
 
     ```bash
-    openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
+    RedForge onboard --mistral-api-key "$MISTRAL_API_KEY"
     ```
 
   </Step>
@@ -44,14 +44,14 @@ Mistral can also be used for memory embeddings (`memorySearch.provider = "mistra
   </Step>
   <Step title="Verify the model is available">
     ```bash
-    openclaw models list --provider mistral
+    RedForge models list --provider mistral
     ```
   </Step>
 </Steps>
 
 ## Built-in LLM catalog
 
-OpenClaw currently ships this bundled Mistral catalog:
+RedForge currently ships this bundled Mistral catalog:
 
 | Model ref                        | Input       | Context | Max output | Notes                                                            |
 | -------------------------------- | ----------- | ------- | ---------- | ---------------------------------------------------------------- |
@@ -90,9 +90,9 @@ The media transcription path uses `/v1/audio/transcriptions`. The default audio 
   <Accordion title="Adjustable reasoning (mistral-small-latest)">
     `mistral/mistral-small-latest` maps to Mistral Small 4 and supports [adjustable reasoning](https://docs.mistral.ai/capabilities/reasoning/adjustable) on the Chat Completions API via `reasoning_effort` (`none` minimizes extra thinking in the output; `high` surfaces full thinking traces before the final answer).
 
-    OpenClaw maps the session **thinking** level to Mistral's API:
+    RedForge maps the session **thinking** level to Mistral's API:
 
-    | OpenClaw thinking level                          | Mistral `reasoning_effort` |
+    | RedForge thinking level                          | Mistral `reasoning_effort` |
     | ------------------------------------------------ | -------------------------- |
     | **off** / **minimal**                            | `none`                     |
     | **low** / **medium** / **high** / **xhigh** / **adaptive** | `high`             |

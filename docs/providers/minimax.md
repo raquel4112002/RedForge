@@ -1,14 +1,14 @@
 ---
-summary: "Use MiniMax models in OpenClaw"
+summary: "Use MiniMax models in RedForge"
 read_when:
-  - You want MiniMax models in OpenClaw
+  - You want MiniMax models in RedForge
   - You need MiniMax setup guidance
 title: "MiniMax"
 ---
 
 # MiniMax
 
-OpenClaw's MiniMax provider defaults to **MiniMax M2.7**.
+RedForge's MiniMax provider defaults to **MiniMax M2.7**.
 
 MiniMax also provides:
 
@@ -50,14 +50,14 @@ Choose your preferred auth method and follow the setup steps.
         <Steps>
           <Step title="Run onboarding">
             ```bash
-            openclaw onboard --auth-choice minimax-global-oauth
+            RedForge onboard --auth-choice minimax-global-oauth
             ```
 
             This authenticates against `api.minimax.io`.
           </Step>
           <Step title="Verify the model is available">
             ```bash
-            openclaw models list --provider minimax-portal
+            RedForge models list --provider minimax-portal
             ```
           </Step>
         </Steps>
@@ -66,14 +66,14 @@ Choose your preferred auth method and follow the setup steps.
         <Steps>
           <Step title="Run onboarding">
             ```bash
-            openclaw onboard --auth-choice minimax-cn-oauth
+            RedForge onboard --auth-choice minimax-cn-oauth
             ```
 
             This authenticates against `api.minimaxi.com`.
           </Step>
           <Step title="Verify the model is available">
             ```bash
-            openclaw models list --provider minimax-portal
+            RedForge models list --provider minimax-portal
             ```
           </Step>
         </Steps>
@@ -98,14 +98,14 @@ Choose your preferred auth method and follow the setup steps.
         <Steps>
           <Step title="Run onboarding">
             ```bash
-            openclaw onboard --auth-choice minimax-global-api
+            RedForge onboard --auth-choice minimax-global-api
             ```
 
             This configures `api.minimax.io` as the base URL.
           </Step>
           <Step title="Verify the model is available">
             ```bash
-            openclaw models list --provider minimax
+            RedForge models list --provider minimax
             ```
           </Step>
         </Steps>
@@ -114,14 +114,14 @@ Choose your preferred auth method and follow the setup steps.
         <Steps>
           <Step title="Run onboarding">
             ```bash
-            openclaw onboard --auth-choice minimax-cn-api
+            RedForge onboard --auth-choice minimax-cn-api
             ```
 
             This configures `api.minimaxi.com` as the base URL.
           </Step>
           <Step title="Verify the model is available">
             ```bash
-            openclaw models list --provider minimax
+            RedForge models list --provider minimax
             ```
           </Step>
         </Steps>
@@ -168,7 +168,7 @@ Choose your preferred auth method and follow the setup steps.
     ```
 
     <Warning>
-    On the Anthropic-compatible streaming path, OpenClaw disables MiniMax thinking by default unless you explicitly set `thinking` yourself. MiniMax's streaming endpoint emits `reasoning_content` in OpenAI-style delta chunks instead of native Anthropic thinking blocks, which can leak internal reasoning into visible output if left enabled implicitly.
+    On the Anthropic-compatible streaming path, RedForge disables MiniMax thinking by default unless you explicitly set `thinking` yourself. MiniMax's streaming endpoint emits `reasoning_content` in OpenAI-style delta chunks instead of native Anthropic thinking blocks, which can leak internal reasoning into visible output if left enabled implicitly.
     </Warning>
 
     <Note>
@@ -178,14 +178,14 @@ Choose your preferred auth method and follow the setup steps.
   </Tab>
 </Tabs>
 
-## Configure via `openclaw configure`
+## Configure via `RedForge configure`
 
 Use the interactive config wizard to set MiniMax without editing JSON:
 
 <Steps>
   <Step title="Launch the wizard">
     ```bash
-    openclaw configure
+    RedForge configure
     ```
   </Step>
   <Step title="Select Model/auth">
@@ -238,7 +238,7 @@ Both `minimax` and `minimax-portal` register `image_generate` with the same
 the bundled `minimax-portal` auth path instead.
 
 When onboarding or API-key setup writes explicit `models.providers.minimax`
-entries, OpenClaw materializes `MiniMax-M2.7` and
+entries, RedForge materializes `MiniMax-M2.7` and
 `MiniMax-M2.7-highspeed` with `input: ["text", "image"]`.
 
 The built-in bundled MiniMax text catalog itself stays text-only metadata until
@@ -352,7 +352,7 @@ See [MiniMax Search](/tools/minimax-search) for full web search configuration an
   </Accordion>
 
   <Accordion title="Thinking defaults">
-    On `api: "anthropic-messages"`, OpenClaw injects `thinking: { type: "disabled" }` unless thinking is already explicitly set in params/config.
+    On `api: "anthropic-messages"`, RedForge injects `thinking: { type: "disabled" }` unless thinking is already explicitly set in params/config.
 
     This prevents MiniMax's streaming endpoint from emitting `reasoning_content` in OpenAI-style delta chunks, which would leak internal reasoning into visible output.
 
@@ -387,8 +387,8 @@ See [MiniMax Search](/tools/minimax-search) for full web search configuration an
 
   <Accordion title="Coding Plan usage details">
     - Coding Plan usage API: `https://api.minimaxi.com/v1/api/openplatform/coding_plan/remains` (requires a coding plan key).
-    - OpenClaw normalizes MiniMax coding-plan usage to the same `% left` display used by other providers. MiniMax's raw `usage_percent` / `usagePercent` fields are remaining quota, not consumed quota, so OpenClaw inverts them. Count-based fields win when present.
-    - When the API returns `model_remains`, OpenClaw prefers the chat-model entry, derives the window label from `start_time` / `end_time` when needed, and includes the selected model name in the plan label so coding-plan windows are easier to distinguish.
+    - RedForge normalizes MiniMax coding-plan usage to the same `% left` display used by other providers. MiniMax's raw `usage_percent` / `usagePercent` fields are remaining quota, not consumed quota, so RedForge inverts them. Count-based fields win when present.
+    - When the API returns `model_remains`, RedForge prefers the chat-model entry, derives the window label from `start_time` / `end_time` when needed, and includes the selected model name in the plan label so coding-plan windows are easier to distinguish.
     - Usage snapshots treat `minimax`, `minimax-cn`, and `minimax-portal` as the same MiniMax quota surface, and prefer stored MiniMax OAuth before falling back to Coding Plan key env vars.
   </Accordion>
 </AccordionGroup>
@@ -403,7 +403,7 @@ See [MiniMax Search](/tools/minimax-search) for full web search configuration an
 - Onboarding and direct API-key setup write explicit model definitions with `input: ["text", "image"]` for both M2.7 variants
 - The bundled provider catalog currently exposes the chat refs as text-only metadata until explicit MiniMax provider config exists
 - Update pricing values in `models.json` if you need exact cost tracking
-- Use `openclaw models list` to confirm the current provider id, then switch with `openclaw models set minimax/MiniMax-M2.7` or `openclaw models set minimax-portal/MiniMax-M2.7`
+- Use `RedForge models list` to confirm the current provider id, then switch with `RedForge models set minimax/MiniMax-M2.7` or `RedForge models set minimax-portal/MiniMax-M2.7`
 
 <Tip>
 Referral link for MiniMax Coding Plan (10% off): [MiniMax Coding Plan](https://platform.minimax.io/subscribe/coding-plan?code=DbXJTRClnb&source=link)
@@ -420,7 +420,7 @@ See [Model providers](/concepts/model-providers) for provider rules.
     This usually means the **MiniMax provider is not configured** (no matching provider entry and no MiniMax auth profile/env key found). A fix for this detection is in **2026.1.12**. Fix by:
 
     - Upgrading to **2026.1.12** (or run from source `main`), then restarting the gateway.
-    - Running `openclaw configure` and selecting a **MiniMax** auth option, or
+    - Running `RedForge configure` and selecting a **MiniMax** auth option, or
     - Adding the matching `models.providers.minimax` or `models.providers.minimax-portal` block manually, or
     - Setting `MINIMAX_API_KEY`, `MINIMAX_OAUTH_TOKEN`, or a MiniMax auth profile so the matching provider can be injected.
 
@@ -432,7 +432,7 @@ See [Model providers](/concepts/model-providers) for provider rules.
     Then recheck with:
 
     ```bash
-    openclaw models list
+    RedForge models list
     ```
 
   </Accordion>

@@ -47,13 +47,13 @@ Choose your provider and follow the setup steps.
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice moonshot-api-key
+        RedForge onboard --auth-choice moonshot-api-key
         ```
 
         Or for the China endpoint:
 
         ```bash
-        openclaw onboard --auth-choice moonshot-api-key-cn
+        RedForge onboard --auth-choice moonshot-api-key-cn
         ```
       </Step>
       <Step title="Set a default model">
@@ -69,7 +69,7 @@ Choose your provider and follow the setup steps.
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider moonshot
+        RedForge models list --provider moonshot
         ```
       </Step>
     </Steps>
@@ -157,7 +157,7 @@ Choose your provider and follow the setup steps.
     <Steps>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice kimi-code-api-key
+        RedForge onboard --auth-choice kimi-code-api-key
         ```
       </Step>
       <Step title="Set a default model">
@@ -173,7 +173,7 @@ Choose your provider and follow the setup steps.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider kimi
+        RedForge models list --provider kimi
         ```
       </Step>
     </Steps>
@@ -199,13 +199,13 @@ Choose your provider and follow the setup steps.
 
 ## Kimi web search
 
-OpenClaw also ships **Kimi** as a `web_search` provider, backed by Moonshot web
+RedForge also ships **Kimi** as a `web_search` provider, backed by Moonshot web
 search.
 
 <Steps>
   <Step title="Run interactive web search setup">
     ```bash
-    openclaw configure --section web
+    RedForge configure --section web
     ```
 
     Choose **Kimi** in the web-search section to store
@@ -277,7 +277,7 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
     }
     ```
 
-    OpenClaw also maps runtime `/think` levels for Moonshot:
+    RedForge also maps runtime `/think` levels for Moonshot:
 
     | `/think` level       | Moonshot behavior          |
     | -------------------- | -------------------------- |
@@ -285,7 +285,7 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
     | Any non-off level    | `thinking.type=enabled`    |
 
     <Warning>
-    When Moonshot thinking is enabled, `tool_choice` must be `auto` or `none`. OpenClaw normalizes incompatible `tool_choice` values to `auto` for compatibility.
+    When Moonshot thinking is enabled, `tool_choice` must be `auto` or `none`. RedForge normalizes incompatible `tool_choice` values to `auto` for compatibility.
     </Warning>
 
   </Accordion>
@@ -293,7 +293,7 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
   <Accordion title="Streaming usage compatibility">
     Native Moonshot endpoints (`https://api.moonshot.ai/v1` and
     `https://api.moonshot.cn/v1`) advertise streaming usage compatibility on the
-    shared `openai-completions` transport. OpenClaw keys that off endpoint
+    shared `openai-completions` transport. RedForge keys that off endpoint
     capabilities, so compatible custom provider ids targeting the same native
     Moonshot hosts inherit the same streaming-usage behavior.
   </Accordion>

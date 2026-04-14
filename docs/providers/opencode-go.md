@@ -33,17 +33,17 @@ provider id `opencode-go` so upstream per-model routing stays correct.
     <Steps>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice opencode-go
+        RedForge onboard --auth-choice opencode-go
         ```
       </Step>
       <Step title="Set a Go model as default">
         ```bash
-        openclaw config set agents.defaults.model.primary "opencode-go/kimi-k2.5"
+        RedForge config set agents.defaults.model.primary "opencode-go/kimi-k2.5"
         ```
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider opencode-go
+        RedForge models list --provider opencode-go
         ```
       </Step>
     </Steps>
@@ -53,12 +53,12 @@ provider id `opencode-go` so upstream per-model routing stays correct.
     <Steps>
       <Step title="Pass the key directly">
         ```bash
-        openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
+        RedForge onboard --opencode-go-api-key "$OPENCODE_API_KEY"
         ```
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider opencode-go
+        RedForge models list --provider opencode-go
         ```
       </Step>
     </Steps>
@@ -78,7 +78,7 @@ provider id `opencode-go` so upstream per-model routing stays correct.
 
 <AccordionGroup>
   <Accordion title="Routing behavior">
-    OpenClaw handles per-model routing automatically when the model ref uses
+    RedForge handles per-model routing automatically when the model ref uses
     `opencode-go/...`. No additional provider config is required.
   </Accordion>
 

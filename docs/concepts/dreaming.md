@@ -10,7 +10,7 @@ read_when:
 # Dreaming (experimental)
 
 Dreaming is the background memory consolidation system in `memory-core`.
-It helps OpenClaw move strong short-term signals into durable memory while
+It helps RedForge move strong short-term signals into durable memory while
 keeping the process explainable and reviewable.
 
 Dreaming is **opt-in** and disabled by default.
@@ -176,10 +176,10 @@ Enable dreaming with a custom sweep cadence:
 Use CLI promotion for preview or manual apply:
 
 ```bash
-openclaw memory promote
-openclaw memory promote --apply
-openclaw memory promote --limit 5
-openclaw memory status --deep
+RedForge memory promote
+RedForge memory promote --apply
+RedForge memory promote --limit 5
+RedForge memory status --deep
 ```
 
 Manual `memory promote` uses deep-phase thresholds by default unless overridden
@@ -188,16 +188,16 @@ with CLI flags.
 Explain why a specific candidate would or would not promote:
 
 ```bash
-openclaw memory promote-explain "router vlan"
-openclaw memory promote-explain "router vlan" --json
+RedForge memory promote-explain "router vlan"
+RedForge memory promote-explain "router vlan" --json
 ```
 
 Preview REM reflections, candidate truths, and deep promotion output without
 writing anything:
 
 ```bash
-openclaw memory rem-harness
-openclaw memory rem-harness --json
+RedForge memory rem-harness
+RedForge memory rem-harness --json
 ```
 
 ## Key defaults

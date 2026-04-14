@@ -1,14 +1,14 @@
 ---
 title: "Alibaba Model Studio"
-summary: "Alibaba Model Studio Wan video generation in OpenClaw"
+summary: "Alibaba Model Studio Wan video generation in RedForge"
 read_when:
-  - You want to use Alibaba Wan video generation in OpenClaw
+  - You want to use Alibaba Wan video generation in RedForge
   - You need Model Studio or DashScope API key setup for video generation
 ---
 
 # Alibaba Model Studio
 
-OpenClaw ships a bundled `alibaba` video-generation provider for Wan models on
+RedForge ships a bundled `alibaba` video-generation provider for Wan models on
 Alibaba Model Studio / DashScope.
 
 - Provider: `alibaba`
@@ -21,7 +21,7 @@ Alibaba Model Studio / DashScope.
 <Steps>
   <Step title="Set an API key">
     ```bash
-    openclaw onboard --auth-choice qwen-standard-api-key
+    RedForge onboard --auth-choice qwen-standard-api-key
     ```
   </Step>
   <Step title="Set a default video model">
@@ -39,7 +39,7 @@ Alibaba Model Studio / DashScope.
   </Step>
   <Step title="Verify the provider is available">
     ```bash
-    openclaw models list --provider alibaba
+    RedForge models list --provider alibaba
     ```
   </Step>
 </Steps>
@@ -90,7 +90,7 @@ Reference image/video mode currently requires **remote http(s) URLs**. Local fil
   </Accordion>
 
   <Accordion title="Auth key priority">
-    OpenClaw checks for auth keys in this order:
+    RedForge checks for auth keys in this order:
 
     1. `MODELSTUDIO_API_KEY` (preferred)
     2. `DASHSCOPE_API_KEY`

@@ -9,7 +9,7 @@ title: "Media Overview"
 
 # Media Generation and Understanding
 
-OpenClaw generates images, videos, and music, understands inbound media (images, audio, video), and speaks replies aloud with text-to-speech. All media capabilities are tool-driven: the agent decides when to use them based on the conversation, and each tool only appears when at least one backing provider is configured.
+RedForge generates images, videos, and music, understands inbound media (images, audio, video), and speaks replies aloud with text-to-speech. All media capabilities are tool-driven: the agent decides when to use them based on the conversation, and each tool only appears when at least one backing provider is configured.
 
 ## Capabilities at a glance
 
@@ -49,7 +49,7 @@ Media understanding uses any vision-capable or audio-capable model registered in
 
 ## How async generation works
 
-Video and music generation run as background tasks because provider processing typically takes 30 seconds to several minutes. When the agent calls `video_generate` or `music_generate`, OpenClaw submits the request to the provider, returns a task ID immediately, and tracks the job in the task ledger. The agent continues responding to other messages while the job runs. When the provider finishes, OpenClaw wakes the agent so it can post the finished media back into the original channel. Image generation and TTS are synchronous and complete inline with the reply.
+Video and music generation run as background tasks because provider processing typically takes 30 seconds to several minutes. When the agent calls `video_generate` or `music_generate`, RedForge submits the request to the provider, returns a task ID immediately, and tracks the job in the task ledger. The agent continues responding to other messages while the job runs. When the provider finishes, RedForge wakes the agent so it can post the finished media back into the original channel. Image generation and TTS are synchronous and complete inline with the reply.
 
 ## Quick links
 

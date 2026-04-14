@@ -1,6 +1,6 @@
 ---
 title: "QA Channel"
-summary: "Synthetic Slack-class channel plugin for deterministic OpenClaw QA scenarios"
+summary: "Synthetic Slack-class channel plugin for deterministic RedForge QA scenarios"
 read_when:
   - You are wiring the synthetic QA transport into a local or CI test run
   - You need the bundled qa-channel config surface
@@ -9,7 +9,7 @@ read_when:
 
 # QA Channel
 
-`qa-channel` is a bundled synthetic message transport for automated OpenClaw QA.
+`qa-channel` is a bundled synthetic message transport for automated RedForge QA.
 
 It is not a production channel. It exists to exercise the same channel plugin
 boundary used by real transports while keeping state deterministic and fully
@@ -38,8 +38,8 @@ inspectable.
   "channels": {
     "qa-channel": {
       "baseUrl": "http://127.0.0.1:43123",
-      "botUserId": "openclaw",
-      "botDisplayName": "OpenClaw QA",
+      "botUserId": "RedForge",
+      "botDisplayName": "RedForge QA",
       "allowFrom": ["*"],
       "pollTimeoutMs": 1000
     }
@@ -85,7 +85,7 @@ the model lane, launch individual runs, and watch results live.
 Full repo-backed QA suite:
 
 ```bash
-pnpm openclaw qa suite
+pnpm RedForge qa suite
 ```
 
 That launches the private QA debugger at a local URL, separate from the
@@ -105,4 +105,4 @@ Follow-up work will add:
 
 - provider/model matrix execution
 - richer scenario discovery
-- OpenClaw-native orchestration later
+- RedForge-native orchestration later

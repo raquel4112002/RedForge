@@ -1,5 +1,5 @@
 ---
-summary: "Install, configure, and manage OpenClaw plugins"
+summary: "Install, configure, and manage RedForge plugins"
 read_when:
   - Installing or configuring plugins
   - Understanding plugin discovery and load rules
@@ -10,10 +10,10 @@ sidebarTitle: "Install and Configure"
 
 # Plugins
 
-Plugins extend OpenClaw with new capabilities: channels, model providers,
+Plugins extend RedForge with new capabilities: channels, model providers,
 tools, skills, speech, realtime transcription, realtime voice,
 media-understanding, image generation, video generation, web fetch, web
-search, and more. Some plugins are **core** (shipped with OpenClaw), others
+search, and more. Some plugins are **core** (shipped with RedForge), others
 are **external** (published on npm by the community).
 
 ## Quick start
@@ -21,25 +21,25 @@ are **external** (published on npm by the community).
 <Steps>
   <Step title="See what is loaded">
     ```bash
-    openclaw plugins list
+    RedForge plugins list
     ```
   </Step>
 
   <Step title="Install a plugin">
     ```bash
     # From npm
-    openclaw plugins install @openclaw/voice-call
+    RedForge plugins install @RedForge/voice-call
 
     # From a local directory or archive
-    openclaw plugins install ./my-plugin
-    openclaw plugins install ./my-plugin.tgz
+    RedForge plugins install ./my-plugin
+    RedForge plugins install ./my-plugin.tgz
     ```
 
   </Step>
 
   <Step title="Restart the Gateway">
     ```bash
-    openclaw gateway restart
+    RedForge gateway restart
     ```
 
     Then configure under `plugins.entries.\<id\>.config` in your config file.
@@ -50,7 +50,7 @@ are **external** (published on npm by the community).
 If you prefer chat-native control, enable `commands.plugins: true` and use:
 
 ```text
-/plugin install clawhub:@openclaw/voice-call
+/plugin install clawhub:@RedForge/voice-call
 /plugin show voice-call
 /plugin enable voice-call
 ```
@@ -59,20 +59,20 @@ The install path uses the same resolver as the CLI: local path/archive, explicit
 `clawhub:<pkg>`, or bare package spec (ClawHub first, then npm fallback).
 
 If config is invalid, install normally fails closed and points you at
-`openclaw doctor --fix`. The only recovery exception is a narrow bundled-plugin
+`RedForge doctor --fix`. The only recovery exception is a narrow bundled-plugin
 reinstall path for plugins that opt into
-`openclaw.install.allowInvalidConfigRecovery`.
+`RedForge.install.allowInvalidConfigRecovery`.
 
 ## Plugin types
 
-OpenClaw recognizes two plugin formats:
+RedForge recognizes two plugin formats:
 
 | Format     | How it works                                                       | Examples                                               |
 | ---------- | ------------------------------------------------------------------ | ------------------------------------------------------ |
-| **Native** | `openclaw.plugin.json` + runtime module; executes in-process       | Official plugins, community npm packages               |
-| **Bundle** | Codex/Claude/Cursor-compatible layout; mapped to OpenClaw features | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
+| **Native** | `RedForge.plugin.json` + runtime module; executes in-process       | Official plugins, community npm packages               |
+| **Bundle** | Codex/Claude/Cursor-compatible layout; mapped to RedForge features | `.codex-plugin/`, `.claude-plugin/`, `.cursor-plugin/` |
 
-Both show up under `openclaw plugins list`. See [Plugin Bundles](/plugins/bundles) for bundle details.
+Both show up under `RedForge plugins list`. See [Plugin Bundles](/plugins/bundles) for bundle details.
 
 If you are writing a native plugin, start with [Building Plugins](/plugins/building-plugins)
 and the [Plugin SDK Overview](/plugins/sdk-overview).
@@ -83,14 +83,14 @@ and the [Plugin SDK Overview](/plugins/sdk-overview).
 
 | Plugin          | Package                | Docs                                 |
 | --------------- | ---------------------- | ------------------------------------ |
-| Matrix          | `@openclaw/matrix`     | [Matrix](/channels/matrix)           |
-| Microsoft Teams | `@openclaw/msteams`    | [Microsoft Teams](/channels/msteams) |
-| Nostr           | `@openclaw/nostr`      | [Nostr](/channels/nostr)             |
-| Voice Call      | `@openclaw/voice-call` | [Voice Call](/plugins/voice-call)    |
-| Zalo            | `@openclaw/zalo`       | [Zalo](/channels/zalo)               |
-| Zalo Personal   | `@openclaw/zalouser`   | [Zalo Personal](/plugins/zalouser)   |
+| Matrix          | `@RedForge/matrix`     | [Matrix](/channels/matrix)           |
+| Microsoft Teams | `@RedForge/msteams`    | [Microsoft Teams](/channels/msteams) |
+| Nostr           | `@RedForge/nostr`      | [Nostr](/channels/nostr)             |
+| Voice Call      | `@RedForge/voice-call` | [Voice Call](/plugins/voice-call)    |
+| Zalo            | `@RedForge/zalo`       | [Zalo](/channels/zalo)               |
+| Zalo Personal   | `@RedForge/zalouser`   | [Zalo Personal](/plugins/zalouser)   |
 
-### Core (shipped with OpenClaw)
+### Core (shipped with RedForge)
 
 <AccordionGroup>
   <Accordion title="Model providers (enabled by default)">
@@ -111,7 +111,7 @@ and the [Plugin SDK Overview](/plugins/sdk-overview).
   </Accordion>
 
   <Accordion title="Other">
-    - `browser` — bundled browser plugin for the browser tool, `openclaw browser` CLI, `browser.request` gateway method, browser runtime, and default browser control service (enabled by default; disable before replacing it)
+    - `browser` — bundled browser plugin for the browser tool, `RedForge browser` CLI, `browser.request` gateway method, browser runtime, and default browser control service (enabled by default; disable before replacing it)
     - `copilot-proxy` — VS Code Copilot Proxy bridge (disabled by default)
   </Accordion>
 </AccordionGroup>
@@ -144,7 +144,7 @@ Looking for third-party plugins? See [Community Plugins](/plugins/community).
 | `entries.\<id\>` | Per-plugin toggles + config                               |
 
 Config changes **require a gateway restart**. If the Gateway is running with config
-watch + in-process restart enabled (the default `openclaw gateway` path), that
+watch + in-process restart enabled (the default `RedForge gateway` path), that
 restart is usually performed automatically a moment after the config write lands.
 
 <Accordion title="Plugin states: disabled vs missing vs invalid">
@@ -155,7 +155,7 @@ restart is usually performed automatically a moment after the config write lands
 
 ## Discovery and precedence
 
-OpenClaw scans for plugins in this order (first match wins):
+RedForge scans for plugins in this order (first match wins):
 
 <Steps>
   <Step title="Config paths">
@@ -163,15 +163,15 @@ OpenClaw scans for plugins in this order (first match wins):
   </Step>
 
   <Step title="Workspace extensions">
-    `\<workspace\>/.openclaw/<plugin-root>/*.ts` and `\<workspace\>/.openclaw/<plugin-root>/*/index.ts`.
+    `\<workspace\>/.RedForge/<plugin-root>/*.ts` and `\<workspace\>/.RedForge/<plugin-root>/*/index.ts`.
   </Step>
 
   <Step title="Global extensions">
-    `~/.openclaw/<plugin-root>/*.ts` and `~/.openclaw/<plugin-root>/*/index.ts`.
+    `~/.RedForge/<plugin-root>/*.ts` and `~/.RedForge/<plugin-root>/*/index.ts`.
   </Step>
 
   <Step title="Bundled plugins">
-    Shipped with OpenClaw. Many are enabled by default (model providers, speech).
+    Shipped with RedForge. Many are enabled by default (model providers, speech).
     Others require explicit enablement.
   </Step>
 </Steps>
@@ -208,40 +208,40 @@ Some categories are exclusive (only one active at a time):
 ## CLI reference
 
 ```bash
-openclaw plugins list                       # compact inventory
-openclaw plugins list --enabled            # only loaded plugins
-openclaw plugins list --verbose            # per-plugin detail lines
-openclaw plugins list --json               # machine-readable inventory
-openclaw plugins inspect <id>              # deep detail
-openclaw plugins inspect <id> --json       # machine-readable
-openclaw plugins inspect --all             # fleet-wide table
-openclaw plugins info <id>                 # inspect alias
-openclaw plugins doctor                    # diagnostics
+RedForge plugins list                       # compact inventory
+RedForge plugins list --enabled            # only loaded plugins
+RedForge plugins list --verbose            # per-plugin detail lines
+RedForge plugins list --json               # machine-readable inventory
+RedForge plugins inspect <id>              # deep detail
+RedForge plugins inspect <id> --json       # machine-readable
+RedForge plugins inspect --all             # fleet-wide table
+RedForge plugins info <id>                 # inspect alias
+RedForge plugins doctor                    # diagnostics
 
-openclaw plugins install <package>         # install (ClawHub first, then npm)
-openclaw plugins install clawhub:<pkg>     # install from ClawHub only
-openclaw plugins install <spec> --force    # overwrite existing install
-openclaw plugins install <path>            # install from local path
-openclaw plugins install -l <path>         # link (no copy) for dev
-openclaw plugins install <plugin> --marketplace <source>
-openclaw plugins install <plugin> --marketplace https://github.com/<owner>/<repo>
-openclaw plugins install <spec> --pin      # record exact resolved npm spec
-openclaw plugins install <spec> --dangerously-force-unsafe-install
-openclaw plugins update <id>             # update one plugin
-openclaw plugins update <id> --dangerously-force-unsafe-install
-openclaw plugins update --all            # update all
-openclaw plugins uninstall <id>          # remove config/install records
-openclaw plugins uninstall <id> --keep-files
-openclaw plugins marketplace list <source>
-openclaw plugins marketplace list <source> --json
+RedForge plugins install <package>         # install (ClawHub first, then npm)
+RedForge plugins install clawhub:<pkg>     # install from ClawHub only
+RedForge plugins install <spec> --force    # overwrite existing install
+RedForge plugins install <path>            # install from local path
+RedForge plugins install -l <path>         # link (no copy) for dev
+RedForge plugins install <plugin> --marketplace <source>
+RedForge plugins install <plugin> --marketplace https://github.com/<owner>/<repo>
+RedForge plugins install <spec> --pin      # record exact resolved npm spec
+RedForge plugins install <spec> --dangerously-force-unsafe-install
+RedForge plugins update <id>             # update one plugin
+RedForge plugins update <id> --dangerously-force-unsafe-install
+RedForge plugins update --all            # update all
+RedForge plugins uninstall <id>          # remove config/install records
+RedForge plugins uninstall <id> --keep-files
+RedForge plugins marketplace list <source>
+RedForge plugins marketplace list <source> --json
 
-openclaw plugins enable <id>
-openclaw plugins disable <id>
+RedForge plugins enable <id>
+RedForge plugins disable <id>
 ```
 
-Bundled plugins ship with OpenClaw. Many are enabled by default (for example
+Bundled plugins ship with RedForge. Many are enabled by default (for example
 bundled model providers, bundled speech providers, and the bundled browser
-plugin). Other bundled plugins still need `openclaw plugins enable <id>`.
+plugin). Other bundled plugins still need `RedForge plugins enable <id>`.
 
 `--force` overwrites an existing installed plugin or hook pack in place.
 It is not supported with `--link`, which reuses the source path instead of
@@ -257,7 +257,7 @@ does not bypass plugin `before_install` policy blocks or scan-failure blocking.
 
 This CLI flag applies to plugin install/update flows only. Gateway-backed skill
 dependency installs use the matching `dangerouslyForceUnsafeInstall` request
-override instead, while `openclaw skills install` remains the separate ClawHub
+override instead, while `RedForge skills install` remains the separate ClawHub
 skill download/install flow.
 
 Compatible bundles participate in the same plugin list/inspect/enable/disable
@@ -266,7 +266,7 @@ Claude `settings.json` defaults, Claude `.lsp.json` and manifest-declared
 `lspServers` defaults, Cursor command-skills, and compatible Codex hook
 directories.
 
-`openclaw plugins inspect <id>` also reports detected bundle capabilities plus
+`RedForge plugins inspect <id>` also reports detected bundle capabilities plus
 supported or unsupported MCP and LSP server entries for bundle-backed plugins.
 
 Marketplace sources can be a Claude known-marketplace name from
@@ -275,7 +275,7 @@ Marketplace sources can be a Claude known-marketplace name from
 URL, or a git URL. For remote marketplaces, plugin entries must stay inside the
 cloned marketplace repo and use relative path sources only.
 
-See [`openclaw plugins` CLI reference](/cli/plugins) for full details.
+See [`RedForge plugins` CLI reference](/cli/plugins) for full details.
 
 ## Plugin API overview
 
@@ -301,7 +301,7 @@ export default definePluginEntry({
 });
 ```
 
-OpenClaw loads the entry object and calls `register(api)` during plugin
+RedForge loads the entry object and calls `register(api)` during plugin
 activation. The loader still falls back to `activate(api)` for older plugins,
 but bundled plugins and new external plugins should treat `register` as the
 public contract.

@@ -8,10 +8,10 @@ title: "Deepgram"
 
 # Deepgram (Audio Transcription)
 
-Deepgram is a speech-to-text API. In OpenClaw it is used for **inbound audio/voice note
+Deepgram is a speech-to-text API. In RedForge it is used for **inbound audio/voice note
 transcription** via `tools.media.audio`.
 
-When enabled, OpenClaw uploads the audio file to Deepgram and injects the transcript
+When enabled, RedForge uploads the audio file to Deepgram and injects the transcript
 into the reply pipeline (`{{Transcript}}` + `[Audio]` block). This is **not streaming**;
 it uses the pre-recorded transcription endpoint.
 
@@ -48,7 +48,7 @@ it uses the pre-recorded transcription endpoint.
     ```
   </Step>
   <Step title="Send a voice note">
-    Send an audio message through any connected channel. OpenClaw transcribes it
+    Send an audio message through any connected channel. RedForge transcribes it
     via Deepgram and injects the transcript into the reply pipeline.
   </Step>
 </Steps>
@@ -119,7 +119,7 @@ it uses the pre-recorded transcription endpoint.
 </AccordionGroup>
 
 <Note>
-Deepgram transcription is **pre-recorded only** (not real-time streaming). OpenClaw
+Deepgram transcription is **pre-recorded only** (not real-time streaming). RedForge
 uploads the complete audio file and waits for the full transcript before injecting
 it into the conversation.
 </Note>
@@ -137,6 +137,6 @@ it into the conversation.
     Common issues and debugging steps.
   </Card>
   <Card title="FAQ" href="/help/faq" icon="circle-question">
-    Frequently asked questions about OpenClaw setup.
+    Frequently asked questions about RedForge setup.
   </Card>
 </CardGroup>

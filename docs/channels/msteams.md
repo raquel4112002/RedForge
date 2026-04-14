@@ -15,20 +15,20 @@ Status: text + DM attachments are supported; channel/group file sending requires
 
 ## Bundled plugin
 
-Microsoft Teams ships as a bundled plugin in current OpenClaw releases, so no
+Microsoft Teams ships as a bundled plugin in current RedForge releases, so no
 separate install is required in the normal packaged build.
 
 If you are on an older build or a custom install that excludes bundled Teams,
 install it manually:
 
 ```bash
-openclaw plugins install @openclaw/msteams
+RedForge plugins install @RedForge/msteams
 ```
 
 Local checkout (when running from a git repo):
 
 ```bash
-openclaw plugins install ./path/to/local/msteams-plugin
+RedForge plugins install ./path/to/local/msteams-plugin
 ```
 
 Details: [Plugins](/tools/plugin)
@@ -36,10 +36,10 @@ Details: [Plugins](/tools/plugin)
 ## Quick setup (beginner)
 
 1. Ensure the Microsoft Teams plugin is available.
-   - Current packaged OpenClaw releases already bundle it.
+   - Current packaged RedForge releases already bundle it.
    - Older/custom installs can add it manually with the commands above.
 2. Create an **Azure Bot** (App ID + client secret + tenant ID).
-3. Configure OpenClaw with those credentials.
+3. Configure RedForge with those credentials.
 4. Expose `/api/messages` (port 3978 by default) via a public URL or tunnel.
 5. Install the Teams app package and start the gateway.
 
@@ -65,7 +65,7 @@ Note: group chats are blocked by default (`channels.msteams.groupPolicy: "allowl
 
 ## Goals
 
-- Talk to OpenClaw via Teams DMs, group chats, or channels.
+- Talk to RedForge via Teams DMs, group chats, or channels.
 - Keep routing deterministic: replies always go back to the channel they arrived on.
 - Default to safe channel behavior (mentions required unless configured otherwise).
 
@@ -116,7 +116,7 @@ Example:
 - Keys should use stable team IDs and channel conversation IDs.
 - When `groupPolicy="allowlist"` and a teams allowlist is present, only listed teams/channels are accepted (mention‑gated).
 - The configure wizard accepts `Team/Channel` entries and stores them for you.
-- On startup, OpenClaw resolves team/channel and user allowlist names to IDs (when Graph permissions allow)
+- On startup, RedForge resolves team/channel and user allowlist names to IDs (when Graph permissions allow)
   and logs the mapping; unresolved team/channel names are kept as typed but ignored for routing by default unless `channels.msteams.dangerouslyAllowNameMatching: true` is enabled.
 
 Example:
@@ -141,17 +141,17 @@ Example:
 ## How it works
 
 1. Ensure the Microsoft Teams plugin is available.
-   - Current packaged OpenClaw releases already bundle it.
+   - Current packaged RedForge releases already bundle it.
    - Older/custom installs can add it manually with the commands above.
 2. Create an **Azure Bot** (App ID + secret + tenant ID).
 3. Build a **Teams app package** that references the bot and includes the RSC permissions below.
 4. Upload/install the Teams app into a team (or personal scope for DMs).
-5. Configure `msteams` in `~/.openclaw/openclaw.json` (or env vars) and start the gateway.
+5. Configure `msteams` in `~/.RedForge/RedForge.json` (or env vars) and start the gateway.
 6. The gateway listens for Bot Framework webhook traffic on `/api/messages` by default.
 
 ## Azure Bot Setup (Prerequisites)
 
-Before configuring OpenClaw, you need to create an Azure Bot resource.
+Before configuring RedForge, you need to create an Azure Bot resource.
 
 ### Step 1: Create Azure Bot
 
@@ -160,7 +160,7 @@ Before configuring OpenClaw, you need to create an Azure Bot resource.
 
    | Field              | Value                                                    |
    | ------------------ | -------------------------------------------------------- |
-   | **Bot handle**     | Your bot name, e.g., `openclaw-msteams` (must be unique) |
+   | **Bot handle**     | Your bot name, e.g., `RedForge-msteams` (must be unique) |
    | **Subscription**   | Select your Azure subscription                           |
    | **Resource group** | Create new or use existing                               |
    | **Pricing tier**   | **Free** for dev/testing                                 |
@@ -196,7 +196,7 @@ Before configuring OpenClaw, you need to create an Azure Bot resource.
 
 > Added in 2026.3.24
 
-For production deployments, OpenClaw supports **federated authentication** as a more secure alternative to client secrets. Two methods are available:
+For production deployments, RedForge supports **federated authentication** as a more secure alternative to client secrets. Two methods are available:
 
 ### Option A: Certificate-based authentication
 
@@ -237,7 +237,7 @@ Use Azure Managed Identity for passwordless authentication. This is ideal for de
 
 1. The bot pod/VM has a managed identity (system-assigned or user-assigned).
 2. A **federated identity credential** links the managed identity to the Entra ID app registration.
-3. At runtime, OpenClaw uses `@azure/identity` to acquire tokens from the Azure IMDS endpoint (`169.254.169.254`).
+3. At runtime, RedForge uses `@azure/identity` to acquire tokens from the Azure IMDS endpoint (`169.254.169.254`).
 4. The token is passed to the Teams SDK for bot authentication.
 
 **Prerequisites:**
@@ -332,7 +332,7 @@ For AKS deployments using workload identity:
 | **Certificate**      | `authType: "federated"` + `certificatePath`    | No shared secret over network      | Certificate management overhead       |
 | **Managed Identity** | `authType: "federated"` + `useManagedIdentity` | Passwordless, no secrets to manage | Azure infrastructure required         |
 
-**Default behavior:** When `authType` is not set, OpenClaw defaults to client secret authentication. Existing configurations continue to work without changes.
+**Default behavior:** When `authType` is not set, RedForge defaults to client secret authentication. Existing configurations continue to work without changes.
 
 ## Local Development (Tunneling)
 
@@ -384,10 +384,10 @@ This is often easier than hand-editing JSON manifests.
 ## Setup (minimal text-only)
 
 1. **Ensure the Microsoft Teams plugin is available**
-   - Current packaged OpenClaw releases already bundle it.
+   - Current packaged RedForge releases already bundle it.
    - Older/custom installs can add it manually:
-     - From npm: `openclaw plugins install @openclaw/msteams`
-     - From a local checkout: `openclaw plugins install ./path/to/local/msteams-plugin`
+     - From npm: `RedForge plugins install @RedForge/msteams`
+     - From a local checkout: `RedForge plugins install ./path/to/local/msteams-plugin`
 
 2. **Bot registration**
    - Create an Azure Bot (see above) and note:
@@ -403,7 +403,7 @@ This is often easier than hand-editing JSON manifests.
    - Create icons: `outline.png` (32x32) and `color.png` (192x192).
    - Zip all three files together: `manifest.json`, `outline.png`, `color.png`.
 
-4. **Configure OpenClaw**
+4. **Configure RedForge**
 
    ```json5
    {
@@ -438,7 +438,7 @@ This is often easier than hand-editing JSON manifests.
 
 ## Member info action
 
-OpenClaw exposes a Graph-backed `member-info` action for Microsoft Teams so agents and automations can resolve channel member details (display name, email, role) directly from Microsoft Graph.
+RedForge exposes a Graph-backed `member-info` action for Microsoft Teams so agents and automations can resolve channel member details (display name, email, role) directly from Microsoft Graph.
 
 Requirements:
 
@@ -484,14 +484,14 @@ Minimal, valid example with the required fields. Replace IDs and URLs.
   manifestVersion: "1.23",
   version: "1.0.0",
   id: "00000000-0000-0000-0000-000000000000",
-  name: { short: "OpenClaw" },
+  name: { short: "RedForge" },
   developer: {
     name: "Your Org",
     websiteUrl: "https://example.com",
     privacyUrl: "https://example.com/privacy",
     termsOfUseUrl: "https://example.com/terms",
   },
-  description: { short: "OpenClaw in Teams", full: "OpenClaw in Teams" },
+  description: { short: "RedForge in Teams", full: "RedForge in Teams" },
   icons: { outline: "outline.png", color: "color.png" },
   accentColor: "#5B6DEF",
   bots: [
@@ -603,7 +603,7 @@ Teams delivers messages via HTTP webhook. If processing takes too long (e.g., sl
 - Teams retrying the message (causing duplicates)
 - Dropped replies
 
-OpenClaw handles this by returning quickly and sending replies proactively, but very slow responses may still cause issues.
+RedForge handles this by returning quickly and sending replies proactively, but very slow responses may still cause issues.
 
 ### Formatting
 
@@ -700,7 +700,7 @@ Teams recently introduced two channel UI styles over the same underlying data mo
 - For explicit file-first sends, use `action=upload-file` with `media` / `filePath` / `path`; optional `message` becomes the accompanying text/comment, and `filename` overrides the uploaded name.
 
 Without Graph permissions, channel messages with images will be received as text-only (the image content is not accessible to the bot).
-By default, OpenClaw only downloads media from Microsoft/Teams hostnames. Override with `channels.msteams.mediaAllowHosts` (use `["*"]` to allow any host).
+By default, RedForge only downloads media from Microsoft/Teams hostnames. Override with `channels.msteams.mediaAllowHosts` (use `["*"]` to allow any host).
 Authorization headers are only attached for hosts in `channels.msteams.mediaAuthAllowHosts` (defaults to Graph + Bot Framework hosts). Keep this list strict (avoid multi-tenant suffixes).
 
 ## Sending files in group chats
@@ -739,7 +739,7 @@ Bots don't have a personal OneDrive drive (the `/me/drive` Graph API endpoint do
    # Response includes: "id": "contoso.sharepoint.com,guid1,guid2"
    ```
 
-4. **Configure OpenClaw:**
+4. **Configure RedForge:**
 
    ```json5
    {
@@ -772,14 +772,14 @@ Per-user sharing is more secure as only the chat participants can access the fil
 
 ### Files stored location
 
-Uploaded files are stored in a `/OpenClawShared/` folder in the configured SharePoint site's default document library.
+Uploaded files are stored in a `/RedForgeShared/` folder in the configured SharePoint site's default document library.
 
 ## Polls (Adaptive Cards)
 
-OpenClaw sends Teams polls as Adaptive Cards (there is no native Teams poll API).
+RedForge sends Teams polls as Adaptive Cards (there is no native Teams poll API).
 
-- CLI: `openclaw message poll --channel msteams --target conversation:<id> ...`
-- Votes are recorded by the gateway in `~/.openclaw/msteams-polls.json`.
+- CLI: `RedForge message poll --channel msteams --target conversation:<id> ...`
+- Votes are recorded by the gateway in `~/.RedForge/msteams-polls.json`.
 - The gateway must stay online to record votes.
 - Polls do not auto-post result summaries yet (inspect the store file if needed).
 
@@ -807,7 +807,7 @@ The `card` parameter accepts an Adaptive Card JSON object. When `card` is provid
 **CLI:**
 
 ```bash
-openclaw message send --channel msteams \
+RedForge message send --channel msteams \
   --target "conversation:19:abc...@thread.tacv2" \
   --card '{"type":"AdaptiveCard","version":"1.5","body":[{"type":"TextBlock","text":"Hello!"}]}'
 ```
@@ -829,16 +829,16 @@ MSTeams targets use prefixes to distinguish between users and conversations:
 
 ```bash
 # Send to a user by ID
-openclaw message send --channel msteams --target "user:40a1a0ed-..." --message "Hello"
+RedForge message send --channel msteams --target "user:40a1a0ed-..." --message "Hello"
 
 # Send to a user by display name (triggers Graph API lookup)
-openclaw message send --channel msteams --target "user:John Smith" --message "Hello"
+RedForge message send --channel msteams --target "user:John Smith" --message "Hello"
 
 # Send to a group chat or channel
-openclaw message send --channel msteams --target "conversation:19:abc...@thread.tacv2" --message "Hello"
+RedForge message send --channel msteams --target "conversation:19:abc...@thread.tacv2" --message "Hello"
 
 # Send an Adaptive Card to a conversation
-openclaw message send --channel msteams --target "conversation:19:abc...@thread.tacv2" \
+RedForge message send --channel msteams --target "conversation:19:abc...@thread.tacv2" \
   --card '{"type":"AdaptiveCard","version":"1.5","body":[{"type":"TextBlock","text":"Hello"}]}'
 ```
 
