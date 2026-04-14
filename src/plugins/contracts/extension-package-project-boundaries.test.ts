@@ -51,7 +51,7 @@ describe("opt-in extension package boundaries", () => {
     const baseConfig = readJsonFile<TsConfigJson>(EXTENSION_PACKAGE_BOUNDARY_BASE_CONFIG);
     expect(baseConfig.extends).toBe("./tsconfig.package-boundary.paths.json");
     expect(baseConfig.compilerOptions).toEqual({
-      ignoreDeprecations: "6.0",
+      ignoreDeprecations: "5.0",
     });
   });
 
