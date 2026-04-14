@@ -27,11 +27,11 @@ title: "Tests"
 - `pnpm test:perf:changed:bench -- --worktree` benchmarks the current worktree change set without committing first.
 - `pnpm test:perf:profile:main`: writes a CPU profile for the Vitest main thread (`.artifacts/vitest-main-profile`).
 - `pnpm test:perf:profile:runner`: writes CPU + heap profiles for the unit runner (`.artifacts/vitest-runner-profile`).
-- Gateway integration: opt-in via `OPENCLAW_TEST_INCLUDE_GATEWAY=1 pnpm test` or `pnpm test:gateway`.
-- `pnpm test:e2e`: Runs gateway end-to-end smoke tests (multi-instance WS/HTTP/node pairing). Defaults to `threads` + `isolate: false` with adaptive workers in `vitest.e2e.config.ts`; tune with `OPENCLAW_E2E_WORKERS=<n>` and set `OPENCLAW_E2E_VERBOSE=1` for verbose logs.
+- Gateway integration: opt-in via `RedForge_TEST_INCLUDE_GATEWAY=1 pnpm test` or `pnpm test:gateway`.
+- `pnpm test:e2e`: Runs gateway end-to-end smoke tests (multi-instance WS/HTTP/node pairing). Defaults to `threads` + `isolate: false` with adaptive workers in `vitest.e2e.config.ts`; tune with `RedForge_E2E_WORKERS=<n>` and set `RedForge_E2E_VERBOSE=1` for verbose logs.
 - `pnpm test:live`: Runs provider live tests (minimax/zai). Requires API keys and `LIVE=1` (or provider-specific `*_LIVE_TEST=1`) to unskip.
-- `pnpm test:docker:openwebui`: Starts Dockerized OpenClaw + Open WebUI, signs in through Open WebUI, checks `/api/models`, then runs a real proxied chat through `/api/chat/completions`. Requires a usable live model key (for example OpenAI in `~/.profile`), pulls an external Open WebUI image, and is not expected to be CI-stable like the normal unit/e2e suites.
-- `pnpm test:docker:mcp-channels`: Starts a seeded Gateway container and a second client container that spawns `openclaw mcp serve`, then verifies routed conversation discovery, transcript reads, attachment metadata, live event queue behavior, outbound send routing, and Claude-style channel + permission notifications over the real stdio bridge. The Claude notification assertion reads the raw stdio MCP frames directly so the smoke reflects what the bridge actually emits.
+- `pnpm test:docker:openwebui`: Starts Dockerized RedForge + Open WebUI, signs in through Open WebUI, checks `/api/models`, then runs a real proxied chat through `/api/chat/completions`. Requires a usable live model key (for example OpenAI in `~/.profile`), pulls an external Open WebUI image, and is not expected to be CI-stable like the normal unit/e2e suites.
+- `pnpm test:docker:mcp-channels`: Starts a seeded Gateway container and a second client container that spawns `RedForge mcp serve`, then verifies routed conversation discovery, transcript reads, attachment metadata, live event queue behavior, outbound send routing, and Claude-style channel + permission notifications over the real stdio bridge. The Claude notification assertion reads the raw stdio MCP frames directly so the smoke reflects what the bridge actually emits.
 
 ## Local PR gate
 
@@ -44,12 +44,12 @@ For local PR land/gate checks, run:
 
 If `pnpm test` flakes on a loaded host, rerun once before treating it as a regression, then isolate with `pnpm test <path/to/test>`. For memory-constrained hosts, use:
 
-- `OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test`
-- `OPENCLAW_VITEST_FS_MODULE_CACHE_PATH=/tmp/openclaw-vitest-cache pnpm test:changed`
+- `RedForge_VITEST_MAX_WORKERS=1 pnpm test`
+- `RedForge_VITEST_FS_MODULE_CACHE_PATH=/tmp/RedForge-vitest-cache pnpm test:changed`
 
 ## Model latency bench (local keys)
 
-Script: [`scripts/bench-model.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-model.ts)
+Script: [`scripts/bench-model.ts`](https://github.com/RedForge/RedForge/blob/main/scripts/bench-model.ts)
 
 Usage:
 
@@ -64,7 +64,7 @@ Last run (2025-12-31, 20 runs):
 
 ## CLI startup bench
 
-Script: [`scripts/bench-cli-startup.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-cli-startup.ts)
+Script: [`scripts/bench-cli-startup.ts`](https://github.com/RedForge/RedForge/blob/main/scripts/bench-cli-startup.ts)
 
 Usage:
 
@@ -77,7 +77,7 @@ Usage:
 - `pnpm tsx scripts/bench-cli-startup.ts --runs 12`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset real`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset real --case status --case gatewayStatus --runs 3`
-- `pnpm tsx scripts/bench-cli-startup.ts --entry openclaw.mjs --entry-secondary dist/entry.js --preset all`
+- `pnpm tsx scripts/bench-cli-startup.ts --entry RedForge.mjs --entry-secondary dist/entry.js --preset all`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset all --output .artifacts/cli-startup-bench-all.json`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset real --case gatewayStatusJson --output .artifacts/cli-startup-bench-smoke.json`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset real --cpu-prof-dir .artifacts/cli-cpu`
@@ -113,7 +113,7 @@ Full cold-start flow in a clean Linux container:
 scripts/e2e/onboard-docker.sh
 ```
 
-This script drives the interactive wizard via a pseudo-tty, verifies config/workspace/session files, then starts the gateway and runs `openclaw health`.
+This script drives the interactive wizard via a pseudo-tty, verifies config/workspace/session files, then starts the gateway and runs `RedForge health`.
 
 ## QR import smoke (Docker)
 

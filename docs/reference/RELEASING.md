@@ -8,7 +8,7 @@ read_when:
 
 # Release Policy
 
-OpenClaw has three public release lanes:
+RedForge has three public release lanes:
 
 - stable: tagged releases that publish to npm `beta` by default, or to npm `latest` when explicitly requested
 - beta: prerelease tags that publish to npm `beta`
@@ -26,7 +26,7 @@ OpenClaw has three public release lanes:
 - `latest` means the current promoted stable npm release
 - `beta` means the current beta install target
 - Stable and stable correction releases publish to npm `beta` by default; release operators can target `latest` explicitly, or promote a vetted beta build later
-- Every OpenClaw release ships the npm package and macOS app together
+- Every RedForge release ships the npm package and macOS app together
 
 ## Release cadence
 
@@ -42,20 +42,20 @@ OpenClaw has three public release lanes:
   validation step
 - Run `pnpm release:check` before every tagged release
 - Main-branch npm preflight also runs
-  `OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_CACHE_TEST=1 pnpm test:live:cache`
+  `RedForge_LIVE_TEST=1 RedForge_LIVE_CACHE_TEST=1 pnpm test:live:cache`
   before packaging the tarball, using both `OPENAI_API_KEY` and
   `ANTHROPIC_API_KEY` workflow secrets
-- Run `RELEASE_TAG=vYYYY.M.D node --import tsx scripts/openclaw-npm-release-check.ts`
+- Run `RELEASE_TAG=vYYYY.M.D node --import tsx scripts/RedForge-npm-release-check.ts`
   (or the matching beta/correction tag) before approval
 - After npm publish, run
-  `node --import tsx scripts/openclaw-npm-postpublish-verify.ts YYYY.M.D`
+  `node --import tsx scripts/RedForge-npm-postpublish-verify.ts YYYY.M.D`
   (or the matching beta/correction version) to verify the published registry
   install path in a fresh temp prefix
 - Maintainer release automation now uses preflight-then-promote:
   - real npm publish must pass a successful npm `preflight_run_id`
   - stable npm releases default to `beta`
   - stable npm publish can target `latest` explicitly via workflow input
-  - stable npm promotion from `beta` to `latest` is still available as an explicit manual mode on the trusted `OpenClaw NPM Release` workflow
+  - stable npm promotion from `beta` to `latest` is still available as an explicit manual mode on the trusted `RedForge NPM Release` workflow
   - that promotion mode still needs a valid `NPM_TOKEN` in the `npm-release` environment because npm `dist-tag` management is separate from trusted publishing
   - public `macOS Release` is validation-only
   - real private mac publish must pass successful private mac
@@ -82,7 +82,7 @@ OpenClaw has three public release lanes:
 
 ## NPM workflow inputs
 
-`OpenClaw NPM Release` accepts these operator-controlled inputs:
+`RedForge NPM Release` accepts these operator-controlled inputs:
 
 - `tag`: required release tag such as `v2026.4.2`, `v2026.4.2-1`, or
   `v2026.4.2-beta.1`
@@ -109,13 +109,13 @@ Rules:
 
 When cutting a stable npm release:
 
-1. Run `OpenClaw NPM Release` with `preflight_only=true`
+1. Run `RedForge NPM Release` with `preflight_only=true`
 2. Choose `npm_dist_tag=beta` for the normal beta-first flow, or `latest` only
    when you intentionally want a direct stable publish
 3. Save the successful `preflight_run_id`
-4. Run `OpenClaw NPM Release` again with `preflight_only=false`, the same
+4. Run `RedForge NPM Release` again with `preflight_only=false`, the same
    `tag`, the same `npm_dist_tag`, and the saved `preflight_run_id`
-5. If the release landed on `beta`, run `OpenClaw NPM Release` later with the
+5. If the release landed on `beta`, run `RedForge NPM Release` later with the
    same stable `tag`, `promote_beta_to_latest=true`, `preflight_only=false`,
    `preflight_run_id` empty, and `npm_dist_tag=beta` when you want to move that
    published build to `latest`
@@ -128,11 +128,11 @@ documented and operator-visible.
 
 ## Public references
 
-- [`.github/workflows/openclaw-npm-release.yml`](https://github.com/openclaw/openclaw/blob/main/.github/workflows/openclaw-npm-release.yml)
-- [`scripts/openclaw-npm-release-check.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/openclaw-npm-release-check.ts)
-- [`scripts/package-mac-dist.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-dist.sh)
-- [`scripts/make_appcast.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/make_appcast.sh)
+- [`.github/workflows/RedForge-npm-release.yml`](https://github.com/RedForge/RedForge/blob/main/.github/workflows/RedForge-npm-release.yml)
+- [`scripts/RedForge-npm-release-check.ts`](https://github.com/RedForge/RedForge/blob/main/scripts/RedForge-npm-release-check.ts)
+- [`scripts/package-mac-dist.sh`](https://github.com/RedForge/RedForge/blob/main/scripts/package-mac-dist.sh)
+- [`scripts/make_appcast.sh`](https://github.com/RedForge/RedForge/blob/main/scripts/make_appcast.sh)
 
 Maintainers use the private release docs in
-[`openclaw/maintainers/release/README.md`](https://github.com/openclaw/maintainers/blob/main/release/README.md)
+[`RedForge/maintainers/release/README.md`](https://github.com/RedForge/maintainers/blob/main/release/README.md)
 for the actual runbook.
