@@ -1,19 +1,15 @@
-export * from "../agents/planning/offensive/mission-run.js";
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { agentCommand } from "../agents/agent-command.js";
-import { resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { DEFAULT_AGENT_WORKSPACE_DIR } from "../agents/workspace.js";
-import { loadConfig } from "../config/config.js";
-import type {
-  InferredMissionIntent,
-  PlannerMetadata,
-} from "../redforge/planner/mission-plan-types.js";
-import type { RuntimeEnv } from "../runtime.js";
-import { defaultRuntime } from "../runtime.js";
-import { shortenHomePath } from "../utils.js";
-import { requireNonEmpty } from "./redforge.shared.js";
+import { requireNonEmpty } from "../../../commands/redforge.shared.js";
+import { loadConfig } from "../../../config/config.js";
+import type { RuntimeEnv } from "../../../runtime.js";
+import { defaultRuntime } from "../../../runtime.js";
+import { shortenHomePath } from "../../../utils.js";
+import { agentCommand } from "../../agent-command.js";
+import { resolveDefaultAgentId } from "../../agent-scope.js";
+import { DEFAULT_AGENT_WORKSPACE_DIR } from "../../workspace.js";
+import type { InferredMissionIntent, PlannerMetadata } from "./mission-plan-types.js";
 
 type ParsedSimpleYaml = Record<string, unknown>;
 type RunStatus = "initialized" | "running" | "completed" | "failed";
