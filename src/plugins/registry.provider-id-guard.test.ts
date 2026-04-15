@@ -5,7 +5,7 @@ import {
 } from "../../test/helpers/plugins/contracts-testkit.js";
 
 describe("plugin registry provider id guard", () => {
-  it("records a diagnostic instead of crashing when provider id is missing", () => {
+  it("records a diagnostic instead of crashing when speech provider id is missing", () => {
     const { config, registry } = createPluginRegistryFixture();
 
     expect(() => {
@@ -15,21 +15,20 @@ describe("plugin registry provider id guard", () => {
         id: "broken-provider-plugin",
         name: "Broken Provider Plugin",
         register(api) {
-          api.registerProvider({
-            label: "Broken Provider",
-            auth: [],
-          } as unknown as { id: string; label: string; auth: [] });
+          api.registerSpeechProvider({
+            label: "Broken Speech Provider",
+          } as unknown as { id: string; label: string });
         },
       });
     }).not.toThrow();
 
-    expect(registry.registry.providers).toHaveLength(0);
+    expect(registry.registry.speechProviders).toHaveLength(0);
     expect(registry.registry.diagnostics).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           pluginId: "broken-provider-plugin",
           level: "error",
-          message: "provider registration missing id",
+          message: "speech provider registration missing id",
         }),
       ]),
     );
