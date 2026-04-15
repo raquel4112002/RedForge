@@ -647,7 +647,9 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
     registrations: R[];
     ownedIds: string[];
   }) => {
-    const id = params.provider.id.trim();
+    const id = normalizeOptionalString(
+      (params.provider as { id?: unknown }).id,
+    );
     const { record, kindLabel } = params;
     const missingLabel = `${kindLabel} registration missing id`;
     const duplicateLabel = `${kindLabel} already registered: ${id}`;
@@ -660,7 +662,9 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
       });
       return;
     }
-    const existing = params.registrations.find((entry) => entry.provider.id === id);
+    const existing = params.registrations.find(
+      (entry) => normalizeOptionalString(entry.provider.id) === id,
+    );
     if (existing) {
       pushDiagnostic({
         level: "error",
