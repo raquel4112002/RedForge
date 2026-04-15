@@ -3,6 +3,7 @@ import {
   createPluginRegistryFixture,
   registerVirtualTestPlugin,
 } from "../../test/helpers/plugins/contracts-testkit.js";
+import type { SpeechProviderPlugin } from "./types.js";
 
 describe("plugin registry provider id guard", () => {
   it("records a diagnostic instead of crashing when speech provider id is missing", () => {
@@ -17,7 +18,7 @@ describe("plugin registry provider id guard", () => {
         register(api) {
           api.registerSpeechProvider({
             label: "Broken Speech Provider",
-          } as unknown as { id: string; label: string });
+          } as unknown as SpeechProviderPlugin);
         },
       });
     }).not.toThrow();
